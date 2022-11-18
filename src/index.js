@@ -33,14 +33,36 @@ import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import AdminLayout from "layouts/Admin.js";
+import Home from "views/Home";
+import Dashboard from "views/Dashboard";
+import User from "views/UserProfile";
+import TableList from "views/TableList";
+import Typography from "views/Typography";
+import Icons from "views/Icons";
+import Notifications from "views/Notifications";
 
+import { Provider } from "react-redux";
+import store from "JS/store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect from="/" to="/admin/dashboard" />
-    </Routes>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="admin" element={<AdminLayout />}>
+          {/* <Route index element={<AdminLayout />} /> */}
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="user" element={<User />} />
+          <Route path="table" element={<TableList />} />
+          <Route path="typography" element={<Typography />} />
+          <Route path="icons" element={<Icons />} />
+
+          <Route path="notifications" element={<Notifications />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </Provider>
 );

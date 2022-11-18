@@ -16,15 +16,13 @@
 
 */
 import React, { Component } from "react";
-import { useLocation, Route, Switch } from "react-router-dom";
+import { useLocation, Route, Switch, Outlet } from "react-router-dom";
 
 import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-
-import routes from "routes.js";
-
+// import routes from "routes.js";
 import sidebarImage from "assets/img/sidebar-3.jpg";
 
 function Admin() {
@@ -33,6 +31,7 @@ function Admin() {
   const [hasImage, setHasImage] = React.useState(true);
   const location = useLocation();
   const mainPanel = React.useRef(null);
+
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -48,6 +47,7 @@ function Admin() {
       }
     });
   };
+
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -61,14 +61,16 @@ function Admin() {
       element.parentNode.removeChild(element);
     }
   }, [location]);
+
   return (
     <>
       <div className="wrapper">
-        <Sidebar color={color} image={hasImage ? image : ""} routes={routes} />
+        <Sidebar color={color} image={hasImage && image} />
         <div className="main-panel" ref={mainPanel}>
           <AdminNavbar />
           <div className="content">
-            <Switch>{getRoutes(routes)}</Switch>
+            {/* <Switch>{getRoutes(routes)}</Switch> */}
+            <Outlet />
           </div>
           <Footer />
         </div>

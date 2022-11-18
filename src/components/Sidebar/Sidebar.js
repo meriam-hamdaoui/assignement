@@ -24,15 +24,15 @@ import logo from "assets/img/reactlogo.png";
 
 function Sidebar({ color, image, routes }) {
   const location = useLocation();
-  const activeRoute = (routeName) => {
-    return location.pathname.indexOf(routeName) > -1 ? "active" : "";
-  };
+  // const activeRoute = (routeName) => {
+  //   return location.pathname.indexOf(routeName) > -1 ? "active" : "";
+  // };
   return (
     <div className="sidebar" data-image={image} data-color={color}>
       <div
         className="sidebar-background"
         style={{
-          backgroundImage: "url(" + image + ")"
+          backgroundImage: "url(" + image + ")",
         }}
       />
       <div className="sidebar-wrapper">
@@ -50,7 +50,95 @@ function Sidebar({ color, image, routes }) {
           </a>
         </div>
         <Nav>
-          {routes.map((prop, key) => {
+          <Nav.Link
+            href="/admin/dashboard"
+            className="nav-link"
+            activeclassname="active"
+            style={{
+              fontSize: "20px",
+              display: "flex",
+            }}
+          >
+            <i className="nc-icon nc-chart-pie-35"></i>
+            <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Dashboard</p>
+          </Nav.Link>
+
+          <Nav.Link
+            href="/admin/user"
+            className="nav-link"
+            activeclassname="active"
+            style={{
+              fontSize: "20px",
+              display: "flex",
+            }}
+          >
+            <i className="nc-icon nc-circle-09"></i>
+            <p style={{ fontSize: "14px", marginLeft: "1rem" }}>User Profile</p>
+          </Nav.Link>
+
+          <Nav.Link
+            href="/admin/table"
+            className="nav-link"
+            activeclassname="active"
+            style={{
+              fontSize: "20px",
+              display: "flex",
+            }}
+          >
+            <i className="nc-icon nc-notes"></i>
+            <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Table List</p>
+          </Nav.Link>
+
+          <Nav.Link
+            href="/admin/typography"
+            className="nav-link"
+            activeclassname="active"
+            style={{
+              fontSize: "20px",
+              display: "flex",
+            }}
+          >
+            <i className="nc-icon nc-paper-2"></i>
+            <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Typography</p>
+          </Nav.Link>
+
+          <Nav.Link
+            href="/admin/icons"
+            className="nav-link"
+            activeclassname="active"
+            style={{
+              fontSize: "20px",
+              display: "flex",
+            }}
+          >
+            <i className="nc-icon nc-atom"></i>
+            <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Icons</p>
+          </Nav.Link>
+
+          <Nav.Link
+            href="/admin/notifications"
+            className="nav-link"
+            activeclassname="active"
+            style={{
+              fontSize: "20px",
+              display: "flex",
+            }}
+          >
+            <i className="nc-icon nc-bell-55"></i>
+            <p style={{ fontSize: "14px", marginLeft: "1rem" }}>
+              Notifications
+            </p>
+          </Nav.Link>
+          {/* <Nav.Link
+            href="/admin/maps"
+            className="nav-link"
+            activeclassname="active"
+          >
+            <i className="nc-icon nc-pin-3">Maps</i>
+            {/* <p>{prop.name}</p> 
+          </Nav.Link> */}
+
+          {/* {routes.map((prop, key) => {
             if (!prop.redirect)
               return (
                 <li
@@ -64,7 +152,7 @@ function Sidebar({ color, image, routes }) {
                   <NavLink
                     to={prop.layout + prop.path}
                     className="nav-link"
-                    activeClassName="active"
+                    activeclassname="active"
                   >
                     <i className={prop.icon} />
                     <p>{prop.name}</p>
@@ -72,7 +160,7 @@ function Sidebar({ color, image, routes }) {
                 </li>
               );
             return null;
-          })}
+          })} */}
         </Nav>
       </div>
     </div>

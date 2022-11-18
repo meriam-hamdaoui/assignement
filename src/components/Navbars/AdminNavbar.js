@@ -18,8 +18,8 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
-
 import routes from "routes.js";
+import { useDispatch } from "react-redux";
 
 function Header() {
   const location = useLocation();
@@ -43,6 +43,9 @@ function Header() {
     }
     return "Brand";
   };
+
+  const dispatch = useDispatch();
+
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -196,7 +199,9 @@ function Header() {
               <Nav.Link
                 className="m-0"
                 href="#pablo"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
               >
                 <span className="no-icon">Log out</span>
               </Nav.Link>
