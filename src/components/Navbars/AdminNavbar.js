@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import routes from "routes.js";
 import { logout } from "../../JS/userReducer";
+import { useDispatch } from "react-redux";
 
 function Header() {
   const location = useLocation();
@@ -45,6 +46,12 @@ function Header() {
   };
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/", { replace: true });
+  };
 
   return (
     <Navbar bg="light" expand="lg">
@@ -206,7 +213,7 @@ function Header() {
                 <button
                   style={{ border: "none", backgroundColor: "transparent" }}
                   className="no-icon"
-                  onClick={() => navigate("/", { replace: true })}
+                  onClick={handleLogout}
                 >
                   <span className="no-icon" style={{ color: "gray" }}>
                     Log out

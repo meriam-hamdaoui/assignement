@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../../JS/userReducer";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     dispatch(
@@ -15,6 +17,7 @@ const SignIn = () => {
         password,
       })
     );
+    navigate("/admin", { replace: true });
   };
 
   return (
