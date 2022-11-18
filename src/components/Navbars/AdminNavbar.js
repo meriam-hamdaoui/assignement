@@ -16,10 +16,10 @@
 
 */
 import React, { Component } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import routes from "routes.js";
-import { useDispatch } from "react-redux";
+import { logout } from "../../JS/userReducer";
 
 function Header() {
   const location = useLocation();
@@ -44,7 +44,7 @@ function Header() {
     return "Brand";
   };
 
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <Navbar bg="light" expand="lg">
@@ -203,7 +203,15 @@ function Header() {
                   e.preventDefault();
                 }}
               >
-                <span className="no-icon">Log out</span>
+                <button
+                  style={{ border: "none", backgroundColor: "transparent" }}
+                  className="no-icon"
+                  onClick={() => navigate("/", { replace: true })}
+                >
+                  <span className="no-icon" style={{ color: "gray" }}>
+                    Log out
+                  </span>
+                </button>
               </Nav.Link>
             </Nav.Item>
           </Nav>

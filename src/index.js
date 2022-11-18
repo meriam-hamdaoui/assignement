@@ -43,6 +43,7 @@ import Notifications from "views/Notifications";
 
 import { Provider } from "react-redux";
 import store from "JS/store";
+import Authentication from "components/auth/Authentication";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -50,7 +51,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-
+        <Route path="login" element={<Authentication />} />
         <Route path="admin" element={<AdminLayout />}>
           {/* <Route index element={<AdminLayout />} /> */}
           <Route index element={<Dashboard />} />
