@@ -11,8 +11,8 @@ const Authentication = () => {
       <div className="auth">
         <div className="main">
           <input type="checkbox" id="chk" aria-hidden="true" />
-          <SignUp />
           <SignIn />
+          <SignUp />
         </div>
       </div>
     </div>

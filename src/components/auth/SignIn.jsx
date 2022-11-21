@@ -46,6 +46,9 @@ const SignIn = () => {
           Login
         </button>
       </form>
+      <p style={{ color: "white", margin: "20%" }}>
+        not a user? create account
+      </p>
     </div>
   );
 };
