@@ -13,6 +13,7 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     dispatch(
       login({
+        isAuth: true,
         email,
         password,
       })
@@ -23,7 +24,7 @@ const SignIn = () => {
   return (
     <div className="login">
       <form>
-        <label htmlFor="chk" aria-hidden="true">
+        <label className="labelSignIn" aria-hidden="true">
           Login
         </label>
         <input
@@ -47,7 +48,7 @@ const SignIn = () => {
         </button>
       </form>
       <p style={{ color: "white", margin: "20%" }}>
-        not a user? create account
+        not a user? <label htmlFor="chk">create account</label>
       </p>
     </div>
   );
