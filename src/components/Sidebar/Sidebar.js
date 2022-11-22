@@ -13,20 +13,14 @@
 =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
 */
-import React, { Component } from "react";
+import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
-
 import { Nav } from "react-bootstrap";
 
-import logo from "assets/img/reactlogo.png";
-
-function Sidebar({ color, image, routes }) {
+function Sidebar({ color, image }) {
   const location = useLocation();
-  // const activeRoute = (routeName) => {
-  //   return location.pathname.indexOf(routeName) > -1 ? "active" : "";
-  // };
+
   return (
     <div className="sidebar" data-image={image} data-color={color}>
       <div
@@ -50,8 +44,11 @@ function Sidebar({ color, image, routes }) {
           </a>
         </div>
         <Nav>
-          <Nav.Link
-            href="/admin/dashboard"
+          <NavLink
+            to="/admin/dashboard"
+            onClick={() => {
+              window.location.reload(false);
+            }}
             className="nav-link"
             activeclassname="active"
             style={{
@@ -61,10 +58,13 @@ function Sidebar({ color, image, routes }) {
           >
             <i className="nc-icon nc-chart-pie-35"></i>
             <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Dashboard</p>
-          </Nav.Link>
+          </NavLink>
 
-          <Nav.Link
-            href="/admin/user"
+          <NavLink
+            to="/admin/user"
+            onClick={() => {
+              window.location.reload(false);
+            }}
             className="nav-link"
             activeclassname="active"
             style={{
@@ -74,7 +74,7 @@ function Sidebar({ color, image, routes }) {
           >
             <i className="nc-icon nc-circle-09"></i>
             <p style={{ fontSize: "14px", marginLeft: "1rem" }}>User Profile</p>
-          </Nav.Link>
+          </NavLink>
 
           <Nav.Link
             href="/admin/table"
@@ -129,38 +129,6 @@ function Sidebar({ color, image, routes }) {
               Notifications
             </p>
           </Nav.Link>
-          {/* <Nav.Link
-            href="/admin/maps"
-            className="nav-link"
-            activeclassname="active"
-          >
-            <i className="nc-icon nc-pin-3">Maps</i>
-            {/* <p>{prop.name}</p> 
-          </Nav.Link> */}
-
-          {/* {routes.map((prop, key) => {
-            if (!prop.redirect)
-              return (
-                <li
-                  className={
-                    prop.upgrade
-                      ? "active active-pro"
-                      : activeRoute(prop.layout + prop.path)
-                  }
-                  key={key}
-                >
-                  <NavLink
-                    to={prop.layout + prop.path}
-                    className="nav-link"
-                    activeclassname="active"
-                  >
-                    <i className={prop.icon} />
-                    <p>{prop.name}</p>
-                  </NavLink>
-                </li>
-              );
-            return null;
-          })} */}
         </Nav>
       </div>
     </div>

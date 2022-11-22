@@ -17,53 +17,23 @@
 */
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  Routes,
-} from "react-router-dom";
-
+import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
 import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
-import AdminLayout from "layouts/Admin.js";
-import Home from "views/Home";
-import Dashboard from "views/Dashboard";
-import User from "views/UserProfile";
-import TableList from "views/TableList";
-import Typography from "views/Typography";
-import Icons from "views/Icons";
-import Notifications from "views/Notifications";
-
 import { Provider } from "react-redux";
 import store from "JS/store";
-import Authentication from "components/auth/Authentication";
+
+import App from "App";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="login" element={<Authentication />} />
-        <Route path="admin" element={<AdminLayout />}>
-          {/* <Route index element={<AdminLayout />} /> */}
-          <Route index element={<Dashboard />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="user" element={<User />} />
-          <Route path="table" element={<TableList />} />
-          <Route path="typography" element={<Typography />} />
-          <Route path="icons" element={<Icons />} />
-
-          <Route path="notifications" element={<Notifications />} />
-        </Route>
-      </Routes>
+      <App />
     </BrowserRouter>
   </Provider>
 );
