@@ -1,30 +1,45 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
+  const userList = useSelector((state) => state.user);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    dispatch(
-      login({
-        isAuth: true,
-        email,
-        password,
-      })
-    );
-    navigate("/admin", { replace: true });
+  const find = userList.find((user) => user.email === email);
+
+  const handleSubmit = () => {
+    if (find) {
+      console.log("find user", find);
+      if (find.password === password) {
+        dispatch(
+          login({
+            isAuth: true,
+            email,
+            password,
+          })
+        );
+        navigate("/admin", { replace: true });
+      }
+      if (find.password !== password) {
+        alert("password is incorrect");
+      }
+    } else {
+      alert("this user doesn't exist, proceed to signup");
+    }
   };
 
   return (
     <div className="login">
       <form>
-        <label className="labelSignIn" aria-hidden="true">
+        <label className="labelSignIn" aria-hidden="true" htmlFor="chk">
           Login
         </label>
         <input
@@ -36,14 +51,24 @@ const SignIn = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          type="password"
+          type={showPwd ? "text" : "password"}
           name="pswd"
           placeholder="Password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="btn_auth" onClick={handleSubmit}>
+        <label htmlFor="chkPwd" style={{ marginLeft: "6rem", color: "white" }}>
+          <input
+            type="checkbox"
+            name="showPwd"
+            id="chkPwd"
+            onClick={() => setShowPwd((showPwd) => (showPwd ? false : true))}
+          />
+          &nbsp;Show Password
+        </label>
+
+        <button type="button" className="btn_auth" onClick={handleSubmit}>
           Login
         </button>
       </form>

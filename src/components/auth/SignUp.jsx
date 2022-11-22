@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { register } from "../../JS/userReducer";
 import { countries } from "components/helpers/constants";
-import { Form } from "react-bootstrap";
 
 const SignUp = () => {
+  const userList = useSelector((state) => state.user);
+  // console.log("userList", userList);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [country, setCountry] = useState("");
@@ -14,25 +17,48 @@ const SignUp = () => {
   const [showPwd, setShowPwd] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    dispatch(
-      register({
-        firstName,
-        lastName,
-        phone,
-        country,
-        email,
-        password,
-      })
-    );
+  const handleSubmit = () => {
+    const find = userList.find((user) => user.email === email);
+
+    // console.log("find", find);
+
+    if (find) {
+      alert("this user already exists");
+    } else {
+      if (
+        firstName === "" ||
+        lastName === "" ||
+        phone === "" ||
+        country === "" ||
+        email === "" ||
+        !email.includes("@") ||
+        password === ""
+      ) {
+        alert("something went wrong!! check your fields");
+      } else {
+        dispatch(
+          register({
+            isAuth: false,
+            firstName,
+            lastName,
+            phone,
+            country,
+            email,
+            password,
+          })
+        );
+        // navigate("/login", { replace: true });
+      }
+    }
   };
 
   return (
     <div className="signup">
       <form>
         <label className="labelSignUp" htmlFor="chk" aria-hidden="true">
-          Sign up
+          Sign Up
         </label>
 
         <input
@@ -73,6 +99,7 @@ const SignUp = () => {
           id="country"
           name="country"
           className="form-control"
+          onChange={(e) => setCountry(e.target.value)}
         >
           <option key={1}>Select Country</option>
           {countries.map((country) => (
@@ -94,7 +121,7 @@ const SignUp = () => {
 
         <input
           autoComplete="no-fill"
-          type={showPwd ? "password" : "text"}
+          type={showPwd ? "text" : "password"}
           name="password"
           placeholder="Password"
           required
@@ -107,12 +134,14 @@ const SignUp = () => {
             type="checkbox"
             name="showPwd"
             id="chkPwd"
+            value={true}
+            defaultChecked={false}
             onClick={() => setShowPwd((showPwd) => (showPwd ? false : true))}
           />
           &nbsp;Show Password
         </label>
         <button type="button" className="btn_signup" onClick={handleSubmit}>
-          Sign up
+          Sign Up
         </button>
       </form>
     </div>
