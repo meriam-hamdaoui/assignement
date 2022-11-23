@@ -5,11 +5,12 @@ const {
   updateUser,
 } = require("../controllers/user");
 
-const userRouter = require("express").Router();
+const express = require("express");
+const userRouter = express.Router();
 
 userRouter.post("/register", registreUser);
 userRouter.post("/login", loginUser);
-userRouter.put("/update", updateUser);
-userRouter.put("/password", changePwd);
+userRouter.put("/update/:id", updateUser);
+userRouter.put("/password/:id", changePwd);
 
 module.exports = userRouter;
