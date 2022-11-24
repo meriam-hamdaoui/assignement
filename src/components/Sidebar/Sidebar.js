@@ -45,7 +45,7 @@ function Sidebar({ color, image }) {
         </div>
         <Nav>
           <NavLink
-            to="/admin/dashboard"
+            to="/profile/dashboard"
             onClick={() => {
               window.location.reload(false);
             }}
@@ -61,7 +61,7 @@ function Sidebar({ color, image }) {
           </NavLink>
 
           <NavLink
-            to="/admin/user"
+            to="/profile/user"
             onClick={() => {
               window.location.reload(false);
             }}
@@ -77,7 +77,7 @@ function Sidebar({ color, image }) {
           </NavLink>
 
           <Nav.Link
-            href="/admin/table"
+            href="/profile/table"
             className="nav-link"
             activeclassname="active"
             style={{
@@ -90,7 +90,7 @@ function Sidebar({ color, image }) {
           </Nav.Link>
 
           <Nav.Link
-            href="/admin/typography"
+            href="/profile/typography"
             className="nav-link"
             activeclassname="active"
             style={{
@@ -103,7 +103,7 @@ function Sidebar({ color, image }) {
           </Nav.Link>
 
           <Nav.Link
-            href="/admin/icons"
+            href="/profile/icons"
             className="nav-link"
             activeclassname="active"
             style={{
@@ -116,7 +116,7 @@ function Sidebar({ color, image }) {
           </Nav.Link>
 
           <Nav.Link
-            href="/admin/notifications"
+            href="/profile/notifications"
             className="nav-link"
             activeclassname="active"
             style={{
