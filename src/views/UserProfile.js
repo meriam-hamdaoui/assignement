@@ -1,10 +1,13 @@
 import React from "react";
-
 // react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
 
 function User() {
+  const user = JSON.parse(localStorage.getItem("loggedIn"));
+  // console.log("localStorage user", user);
+
+  const { firstName, lastName, phone, country, email } = user.user;
+
   return (
     <>
       <Container fluid>
@@ -17,28 +20,7 @@ function User() {
               <Card.Body>
                 <Form>
                   <Row>
-                    <Col className="pr-1" md="5">
-                      <Form.Group>
-                        <label>Company (disabled)</label>
-                        <Form.Control
-                          defaultValue="Creative Code Inc."
-                          disabled
-                          placeholder="Company"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-1" md="3">
-                      <Form.Group>
-                        <label>Username</label>
-                        <Form.Control
-                          defaultValue="michael23"
-                          placeholder="Username"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-1" md="4">
+                    <Col className="pl-1" md="10">
                       <Form.Group>
                         <label htmlFor="exampleInputEmail1">
                           Email address
@@ -46,6 +28,8 @@ function User() {
                         <Form.Control
                           placeholder="Email"
                           type="email"
+                          defaultValue={email}
+                          disabled
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -55,7 +39,7 @@ function User() {
                       <Form.Group>
                         <label>First Name</label>
                         <Form.Control
-                          defaultValue="Mike"
+                          defaultValue={firstName}
                           placeholder="Company"
                           type="text"
                         ></Form.Control>
@@ -65,7 +49,7 @@ function User() {
                       <Form.Group>
                         <label>Last Name</label>
                         <Form.Control
-                          defaultValue="Andrew"
+                          defaultValue={lastName}
                           placeholder="Last Name"
                           type="text"
                         ></Form.Control>
@@ -73,44 +57,23 @@ function User() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col md="12">
-                      <Form.Group>
-                        <label>Address</label>
-                        <Form.Control
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                          placeholder="Home Address"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="4">
-                      <Form.Group>
-                        <label>City</label>
-                        <Form.Control
-                          defaultValue="Mike"
-                          placeholder="City"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-1" md="4">
+                    <Col md="4">
                       <Form.Group>
                         <label>Country</label>
                         <Form.Control
-                          defaultValue="Andrew"
+                          defaultValue={country}
                           placeholder="Country"
                           type="text"
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    <Col className="pl-1" md="4">
+                    <Col md="8">
                       <Form.Group>
-                        <label>Postal Code</label>
+                        <label>Address</label>
                         <Form.Control
-                          placeholder="ZIP Code"
-                          type="number"
+                          defaultValue="Bld, nr. 8 Bl 1, Sc 1, Ap 09"
+                          placeholder="Home Address"
+                          type="text"
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -156,16 +119,18 @@ function User() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/default-avatar.png")}
                     ></img>
-                    <h5 className="title">Mike Andrew</h5>
+                    <h5 className="title">{firstName + " " + lastName}</h5>
                   </a>
-                  <p className="description">michael24</p>
+                  <p className="description">{firstName + "123"}</p>
                 </div>
-                <p className="description text-center">
-                  "Lamborghini Mercy <br></br>
-                  Your chick she so thirsty <br></br>
-                  I'm in that two seat Lambo"
+                <p className="description ">
+                  Pellentesque habitant morbi tristique senectus et netus et
+                  malesuada fames ac turpis egestas. <br /> Vestibulum tortor
+                  quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+                  <br /> Donec eu libero sit amet quam egestas semper. <br />
+                  Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
                 </p>
               </Card.Body>
               <hr></hr>

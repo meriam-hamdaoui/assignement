@@ -31,23 +31,8 @@ function FixedPlugin({
   color,
   setColor,
   image,
-  setImage
+  setImage,
 }) {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     classes: "dropdown show-dropdown open",
-  //     bg_checked: true,
-  //     bgImage: this.props.bgImage,
-  //   };
-  // }
-  // handleClick = () => {
-  //   this.props.handleFixedClick();
-  // };
-  // onChangeClick = () => {
-  //   this.props.handleHasImage(!this.state.bg_checked);
-  //   this.setState({ bg_checked: !this.state.bg_checked });
-  // };
   return (
     <div className="fixed-plugin">
       <Dropdown>

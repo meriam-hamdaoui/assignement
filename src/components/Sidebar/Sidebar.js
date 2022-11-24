@@ -46,9 +46,6 @@ function Sidebar({ color, image }) {
         <Nav>
           <NavLink
             to="/profile/dashboard"
-            onClick={() => {
-              window.location.reload(false);
-            }}
             className="nav-link"
             activeclassname="active"
             style={{
@@ -62,9 +59,6 @@ function Sidebar({ color, image }) {
 
           <NavLink
             to="/profile/user"
-            onClick={() => {
-              window.location.reload(false);
-            }}
             className="nav-link"
             activeclassname="active"
             style={{

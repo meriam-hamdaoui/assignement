@@ -28,9 +28,8 @@ const SignIn = () => {
         if (response) {
           const { user, token } = response.data;
           localStorage.setItem(
-            "login",
+            "loggedIn",
             JSON.stringify({
-              loggedIn: true,
               user: user,
               token: token,
             })

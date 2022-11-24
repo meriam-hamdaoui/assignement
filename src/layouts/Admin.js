@@ -31,7 +31,6 @@ function Admin() {
   const location = useLocation();
   const mainPanel = React.useRef(null);
 
-  const userAccount = useSelector((state) => state.user);
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
