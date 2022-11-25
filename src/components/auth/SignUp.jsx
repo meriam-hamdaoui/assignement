@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../JS/userReducer";
 import { countries } from "components/helpers/constants";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { registerAPI } from "api/CRUD";
 
 const SignUp = () => {
   const userList = useSelector((state) => state.user);
@@ -19,36 +22,56 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const find = userList.find((user) => user.email === email);
 
     // console.log("find", find);
 
     if (find) {
-      alert("this user already exists");
+      toast.warning("this user already exists", {
+        position: toast.POSITION.BOTTOM_CENTER,
+      });
     } else {
       if (
-        firstName === "" ||
-        lastName === "" ||
-        phone === "" ||
-        country === "" ||
-        email === "" ||
+        !firstName ||
+        !lastName ||
+        !phone ||
+        !country ||
+        !email ||
         !email.includes("@") ||
-        password === ""
+        !password
       ) {
-        alert("something went wrong!! check your fields");
+        toast.error("Please fill all inputs and verify your email address", {
+          position: toast.POSITION.TOP_LEFT,
+        });
       } else {
-        dispatch(
-          register({
-            isAuth: false,
-            firstName,
-            lastName,
-            phone,
-            country,
-            email,
-            password,
-          })
-        );
+        await registerAPI({
+          isAuth: false,
+          firstName,
+          lastName,
+          phone,
+          country,
+          email,
+          password,
+        }).then((response) => {
+          if (response) {
+            dispatch(
+              register({
+                isAuth: false,
+                firstName,
+                lastName,
+                phone,
+                country,
+                email,
+                password,
+              })
+            );
+            toast.success("registration successed", {
+              position: toast.POSITION.BOTTOM_RIGHT,
+            });
+          }
+        });
+
         // navigate("/login", { replace: true });
       }
     }
