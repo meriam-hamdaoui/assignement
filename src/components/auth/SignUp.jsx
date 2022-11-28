@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { register } from "../../JS/userReducer";
 import { countries } from "components/helpers/constants";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { registerAPI } from "api/CRUD";
+import { registerAPI, fetchUserAPI } from "api/CRUD";
 
 const SignUp = () => {
   const userList = useSelector((state) => state.user);
-  // console.log("userList", userList);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,61 +16,64 @@ const SignUp = () => {
   const [showPwd, setShowPwd] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
+  // const fetchData = async () => {
+  //   const response = await fetchUserAPI();
+  //   // console.log("response", response);
+  // };
+
+  // useEffect(() => fetchData(), []);
 
   const handleSubmit = async () => {
-    const find = userList.find((user) => user.email === email);
+    await fetchUserAPI()
+      .then(async (response) => {
+        console.log("response", response);
+        dispatch(setUsers([...response]));
+        console.log("userList", userList);
 
-    // console.log("find", find);
+        // work on
 
-    if (find) {
-      toast.warning("this user already exists", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
-    } else {
-      if (
-        !firstName ||
-        !lastName ||
-        !phone ||
-        !country ||
-        !email ||
-        !email.includes("@") ||
-        !password
-      ) {
-        toast.error("Please fill all inputs and verify your email address", {
-          position: toast.POSITION.TOP_LEFT,
-        });
-      } else {
-        await registerAPI({
-          isAuth: false,
-          firstName,
-          lastName,
-          phone,
-          country,
-          email,
-          password,
-        }).then((response) => {
-          if (response) {
-            dispatch(
-              register({
-                isAuth: false,
-                firstName,
-                lastName,
-                phone,
-                country,
-                email,
-                password,
-              })
-            );
-            toast.success("registration successed", {
-              position: toast.POSITION.BOTTOM_RIGHT,
-            });
-          }
-        });
+        const findUser = userList.find((user) => user.email === email);
 
-        // navigate("/login", { replace: true });
-      }
-    }
+        // if (findUser) {
+        //   alert("this email already used");
+        // } else {
+        //   if (
+        //     !firstName ||
+        //     !lastName ||
+        //     !phone ||
+        //     !country ||
+        //     !email ||
+        //     !password
+        //   ) {
+        //     alert("all fields are required");
+        //   } else if (email.findIndexOf("@") === -1) {
+        //     alert("enter a valid email");
+        //   }
+        //   if (findUser.password !== password) {
+        //     alert("password incorrect");
+        //   } else if (
+        //     findUser.email !== email &&
+        //     findUser.password === password
+        //   ) {
+        //     const value = {
+        //       firstName: firstName,
+        //       lastName: lastName,
+        //       phone: phone,
+        //       country: country,
+        //       email: email,
+        //       password: password,
+        //     };
+        //     await registerAPI(value).then((response) => {
+        //       if (response) {
+        //         // dispatch(register(response));
+        //         console.log("response registerApi: " + response);
+        //       }
+        //     });
+        //   }
+        // }
+      })
+      .catch((error) => console.error("error", error));
   };
 
   return (
@@ -121,6 +120,7 @@ const SignUp = () => {
           }}
           id="country"
           name="country"
+          value={country}
           className="form-control"
           onChange={(e) => setCountry(e.target.value)}
         >

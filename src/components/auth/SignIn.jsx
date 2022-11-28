@@ -19,7 +19,7 @@ const SignIn = () => {
     e.preventDefault();
     await axios
       .post(
-        "http://localhost:5000/api/auth/login",
+        "http://localhost:5000/users",
         { email, password }
         // { headers: { "Access-Control-Allow-Origin": "*" } }
       )
