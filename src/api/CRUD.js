@@ -20,7 +20,15 @@ export const registerAPI = async (value) => {
   );
   return response;
 };
-export const loginAPI = async () => {};
+export const loginAPI = async (value, token) => {
+  const response = await axios.post(`${REACT_APP_URL}/users`, value, {
+    header: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
+  return response;
+};
 export const updateProfileAPI = async (id, value) => {
   return await axios.delete(`${REACT_APP_URL}/users/${id}`, value);
 };
