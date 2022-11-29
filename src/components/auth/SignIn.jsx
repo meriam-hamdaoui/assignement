@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { loginAPI } from "../../api/CRUD";
+import { loginAPI, REACT_APP_URL } from "../../api/CRUD";
 
 const SignIn = () => {
   const userList = useSelector((state) => state.user);
@@ -21,7 +21,7 @@ const SignIn = () => {
     dispatch(setUsers([...data]));
   };
 
-  console.log("userList", userList);
+  // console.log("userList", userList);
 
   useEffect(() => {
     fetchUserAPI().catch((error) => console.error("error", error));

@@ -4,6 +4,7 @@ import { register, setUsers } from "../../JS/userReducer";
 import { countries } from "components/helpers/constants";
 import { registerAPI, REACT_APP_URL } from "api/CRUD";
 import axios from "axios";
+import bcrypt from "bcryptjs-react";
 
 const SignUp = () => {
   const userList = useSelector((state) => state.user);
@@ -18,41 +19,52 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
 
+  // fetching users from db
   const fetchUserAPI = async () => {
     const { data } = await axios.get(`${REACT_APP_URL}/users`);
     dispatch(setUsers([...data]));
   };
 
-  console.log("userList", userList);
+  // console.log("userList", userList);
 
   useEffect(() => {
     fetchUserAPI().catch((error) => console.error("error", error));
   }, []);
 
   const handleSubmit = async () => {
+    // verify if those credential exists
     const findUser = userList.find((user) => user.email === email);
     // console.log("findUser", findUser);
 
+    // check if all fields are fullfiled
     if (!firstName || !lastName || !phone || !country || !email || !password) {
       alert("all fields are required");
       return;
+      // check validation email
     } else if (email.indexOf("@") === -1) {
       alert("enter a valid email");
 
       return;
     }
+
+    // verify if those credential exists
     if (findUser) {
       alert("this email is already used");
       return;
     }
+    // if everything is ok we post our user
     if (!findUser) {
+      // hashing the password befor register the user
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPassowrd = bcrypt.hashSync(password, salt);
+
       const value = {
         firstName: firstName,
         lastName: lastName,
         phone: phone,
         country: country,
         email: email,
-        password: password,
+        password: hashedPassowrd,
       };
 
       // console.log("new user", value);
@@ -60,6 +72,13 @@ const SignUp = () => {
         .then((response) => {
           if (response) {
             dispatch(register({ ...value }));
+            alert("registred with success");
+            setFirstName("");
+            setLastName("");
+            setCountry("");
+            setPhone("");
+            setEmail("");
+            setPassword("");
           }
         })
         .catch((error) => {
