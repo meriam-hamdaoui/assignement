@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { loginAPI } from "../../api/CRUD";
 
 const SignIn = () => {
   const userList = useSelector((state) => state.user);
@@ -15,37 +16,64 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await axios
-      .post(
-        "http://localhost:5000/users",
-        { email, password }
-        // { headers: { "Access-Control-Allow-Origin": "*" } }
-      )
-      .then((response) => {
-        // console.log("response", response);
-        if (response) {
-          const { user, token } = response.data;
-          localStorage.setItem(
-            "loggedIn",
-            JSON.stringify({
-              user: user,
-              token: token,
-            })
-          );
-          dispatch(login({ email, password }));
-          setError("");
-          navigate("/profile", { replace: true });
-          setEmail("");
-          setPassword("");
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          setError(error.response.data.message);
-        }
-      });
+  const fetchUserAPI = async () => {
+    const { data } = await axios.get(`${REACT_APP_URL}/users`);
+    dispatch(setUsers([...data]));
+  };
+
+  console.log("userList", userList);
+
+  useEffect(() => {
+    fetchUserAPI().catch((error) => console.error("error", error));
+  }, []);
+
+  const handleSubmit = async () => {
+    const userExist = userList.find((user) => user.email === email);
+
+    if (!email || !password) {
+      alert("all fields are required");
+      return;
+    } else if (email.indexOf("@") === -1) {
+      alert("enter a valid email");
+      return;
+    }
+    if (
+      userExist &&
+      (userExist.email !== email || userExist.password !== password)
+    ) {
+      alert("there is no such user with those cridentials");
+      return;
+    }
+
+    // await axios
+    //   .post(
+    //     "http://localhost:5000/users",
+    //     { email, password }
+    //     // { headers: { "Access-Control-Allow-Origin": "*" } }
+    //   )
+    //   .then((response) => {
+    //     // console.log("response", response);
+    //     if (response) {
+    //       const { user, token } = response.data;
+    //       localStorage.setItem(
+    //         "loggedIn",
+    //         JSON.stringify({
+    //           user: user,
+    //           token: token,
+    //         })
+    //       );
+    //       dispatch(login({ email, password }));
+    //       setError("");
+    //       navigate("/profile", { replace: true });
+    //       setEmail("");
+    //       setPassword("");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     if (error) {
+    //       setError(error.response.data.message);
+    //     }
+    //   });
   };
 
   return (
