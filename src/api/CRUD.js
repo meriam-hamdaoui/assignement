@@ -10,7 +10,7 @@ export const fetchUserAPI = async () => {
 
 export const registerAPI = async (value) => {
   const response = await axios.post(
-    `${REACT_APP_URL}/users`,
+    `${REACT_APP_URL}/users/register`,
     { ...value },
     {
       header: {
@@ -21,7 +21,7 @@ export const registerAPI = async (value) => {
   return response;
 };
 export const loginAPI = async (value, token) => {
-  const response = await axios.post(`${REACT_APP_URL}/users`, value, {
+  const response = await axios.post(`${REACT_APP_URL}/users/login`, value, {
     header: {
       "Content-Type": "application/json",
       Authorization: token,
