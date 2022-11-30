@@ -73,12 +73,7 @@ const SignUp = () => {
           if (response) {
             dispatch(register({ ...value }));
             alert("registred with success");
-            setFirstName("");
-            setLastName("");
-            setCountry("");
-            setPhone("");
-            setEmail("");
-            setPassword("");
+            window.location.reload(true);
           }
         })
         .catch((error) => {

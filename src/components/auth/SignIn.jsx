@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../JS/userReducer";
+import { login, setUsers } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import bcrypt from "bcryptjs-react";
 import { loginAPI, REACT_APP_URL } from "../../api/CRUD";
 
 const SignIn = () => {
@@ -21,15 +22,11 @@ const SignIn = () => {
     dispatch(setUsers([...data]));
   };
 
-  // console.log("userList", userList);
-
   useEffect(() => {
     fetchUserAPI().catch((error) => console.error("error", error));
   }, []);
 
   const handleSubmit = async () => {
-    const userExist = userList.find((user) => user.email === email);
-
     if (!email || !password) {
       alert("all fields are required");
       return;
@@ -37,43 +34,24 @@ const SignIn = () => {
       alert("enter a valid email");
       return;
     }
-    if (
-      userExist &&
-      (userExist.email !== email || userExist.password !== password)
-    ) {
+
+    const userExist = userList.find((user) => user.email === email);
+    console.log("userExist", userExist.password);
+
+    if (!userExist) {
       alert("there is no such user with those cridentials");
       return;
     }
 
-    // await axios
-    //   .post(
-    //     "http://localhost:5000/users",
-    //     { email, password }
-    //     // { headers: { "Access-Control-Allow-Origin": "*" } }
-    //   )
-    //   .then((response) => {
-    //     // console.log("response", response);
-    //     if (response) {
-    //       const { user, token } = response.data;
-    //       localStorage.setItem(
-    //         "loggedIn",
-    //         JSON.stringify({
-    //           user: user,
-    //           token: token,
-    //         })
-    //       );
-    //       dispatch(login({ email, password }));
-    //       setError("");
-    //       navigate("/profile", { replace: true });
-    //       setEmail("");
-    //       setPassword("");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     if (error) {
-    //       setError(error.response.data.message);
-    //     }
-    //   });
+    bcrypt.compare(password, userExist.password).then(async (isMatch) => {
+      console.log("matched", isMatch);
+      if (!isMatch) {
+        alert("passwords mismatch");
+        return;
+      }
+      if (isMatch) {
+      }
+    });
   };
 
   return (
