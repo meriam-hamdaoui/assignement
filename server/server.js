@@ -4,35 +4,54 @@ const jsonServer = require("json-server");
 const jwt = require("jsonwebtoken");
 
 const server = jsonServer.create();
-const userdb = JSON.parse(fs.readFileSync("./users.json", "utf-8"));
+const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 server.use(jsonServer.defaults());
 
-const SECRET_KEY = "18112019";
-
+const SECRET_KEY = "72676376";
 const expiresIn = "1h";
+
 const createToken = (payload) => {
   return jwt.sign(payload, SECRET_KEY, { expiresIn });
 };
 
-function isLoginAuthenticated({ email, password }) {
-  const user = userdb.users.find(
+server.get("/api/users", (req, res) => {
+  return res.status(200).json(userdb.users);
+});
+
+const isLoginAuthenticated = ({ email, password }) => {
+  return (
+    userdb.users.findIndex(
+      (user) => user.email === email && user.password === password
+    ) !== -1
+  );
+};
+
+server.post("/api/auth/login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (!isLoginAuthenticated({ email, password })) {
+    const status = 401;
+    const message = "Incorrect Email or Password";
+    res.status(status).json({ status, message });
+    return;
+  }
+  const user = userdb.users.filter(
     (user) => user.email === email && user.password === password
   );
-  if (user) {
-    return user;
-  } else {
-    return false;
-  }
-}
+  const access_token = createToken({ email, password });
+
+  res.status(200).json({ user: user, token: access_token });
+});
+
 const isRegisterAuthenticated = ({ email }) => {
   return userdb.users.findIndex((user) => user.email === email) !== -1;
 };
 
 server.post("/api/auth/register", (req, res) => {
-  const { firstName, lastName, phone, country, email, password } = req.body;
+  const { email, password } = req.body;
   if (isRegisterAuthenticated({ email })) {
     const status = 401;
     const message = "Email already exist";
@@ -40,29 +59,26 @@ server.post("/api/auth/register", (req, res) => {
     return;
   }
 
-  fs.readFile("./users.json", (err, data) => {
+  fs.readFile("./db.json", (err, data) => {
     if (err) {
       const status = 401;
       const message = err;
       res.status(status).json({ status, message });
       return;
     }
+
     data = JSON.parse(data.toString());
 
-    // give an id to the new item which is the last one's id + 1
     let last_item_id = data.users[data.users.length - 1].id;
 
-    data.users.push({
+    const newUser = {
       id: last_item_id + 1,
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-      country: country,
-      email: email,
-      password: password,
-    });
+      ...req.body,
+    };
+
+    data.users.push(newUser);
     let writeData = fs.writeFile(
-      "./users.json",
+      "./db.json",
       JSON.stringify(data),
       (err, result) => {
         if (err) {
@@ -74,23 +90,38 @@ server.post("/api/auth/register", (req, res) => {
       }
     );
   });
-  const token = createToken({ email, password });
-  res.status(200).json({ token });
+
+  const access_token = createToken({ email, password });
+  res.status(200).json({ user: req.body, token: access_token });
 });
 
-server.post("/api/auth/login", (req, res) => {
-  const { email, password } = req.body;
+server.delete("/api/auth/delete/:id", (req, res) => {
+  const { id } = req.params;
 
-  if (!isLoginAuthenticated({ email, password })) {
-    const status = 401;
-    const message = "Incorrect Email or Password";
-    res.status(status).json({ status, message });
-    return;
-  }
+  fs.readFile("./db.json", (error, data) => {
+    if (error) {
+      const status = 401;
+      const message = error;
+      res.status(status).json({ status, message });
+      return;
+    }
 
-  const token = createToken({ email, password });
-  const user = isLoginAuthenticated({ email, password });
-  res.status(200).json({ user: user, token: token });
+    data = JSON.parse(data.toString());
+
+    const userIndex = data.users.findIndex(
+      (user) => Number(user.id) === Number(id)
+    );
+
+    // const something = data.users.splice(userIndex, 1);
+
+    fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+      if (error) {
+        return res.status(401).json({ message: error });
+      }
+    });
+
+    res.status(200).json(userdb.users);
+  });
 });
 
 server.listen(5000, () => {
