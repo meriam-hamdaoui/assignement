@@ -89,7 +89,8 @@ const isLoginAuthenticated = ({ email, password }) => {
   );
 };
 
-//
+// it works fine
+// without adding user to the db.json
 server.post("/api/auth/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -156,6 +157,14 @@ server.get("/api/users/:id", (req, res) => {
     res.status(200).json(data.users[userIndex]);
   });
 });
+
+// req test for middleware auth
+// try to change the auth middleware
+server.put(
+  "/api/users/update/:id",
+  (req, res, next) => {},
+  (req, res) => {}
+);
 
 server.listen(5000, () => {
   console.log("Running fake api json server");
