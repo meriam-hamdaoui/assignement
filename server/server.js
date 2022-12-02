@@ -77,22 +77,18 @@ server.post("/api/auth/register", (req, res) => {
     };
 
     data.users.push(newUser);
-    let writeData = fs.writeFile(
-      "./db.json",
-      JSON.stringify(data),
-      (err, result) => {
-        if (err) {
-          const status = 401;
-          const message = err;
-          res.status(status).json({ status, message });
-          return;
-        }
+    fs.writeFile("./db.json", JSON.stringify(data), (err, result) => {
+      if (err) {
+        const status = 401;
+        const message = err;
+        res.status(status).json({ status, message });
+        return;
       }
-    );
+    });
   });
 
-  const access_token = createToken({ email, password });
-  res.status(200).json({ user: req.body, token: access_token });
+  // const access_token = createToken({ email, password });
+  res.status(200).json({ user: req.body });
 });
 
 server.delete("/api/auth/delete/:id", (req, res) => {
