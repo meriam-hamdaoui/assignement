@@ -44,6 +44,15 @@
       "country": "Taiwan",
       "email": "user6@example.com",
       "password": "123456"
+    },
+    {
+      "id": 7,
+      "firstName": "user7",
+      "lastName": "user7",
+      "phone": "123456789",
+      "country": "Taiwan",
+      "email": "user7@example.com",
+      "password": "123456"
     }
   ]
 }
