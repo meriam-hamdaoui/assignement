@@ -143,7 +143,7 @@ server.get("/api/users/:id", (req, res) => {
   fs.readFile("./db.json", (err, data) => {
     if (err) {
       const status = 401;
-      const message = error;
+      const message = err;
       res.status(status).json({ status, message });
       return;
     }
