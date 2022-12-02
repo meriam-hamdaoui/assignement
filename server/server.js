@@ -51,7 +51,7 @@ const isRegisterAuthenticated = ({ email }) => {
 };
 
 server.post("/api/auth/register", (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   if (isRegisterAuthenticated({ email })) {
     const status = 401;
     const message = "Email already exist";
@@ -108,15 +108,14 @@ server.delete("/api/auth/delete/:id", (req, res) => {
       (user) => Number(user.id) === Number(id)
     );
 
-    // const something = data.users.splice(userIndex, 1);
+    data.users.splice(userIndex, 1);
 
     fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
       if (error) {
         return res.status(401).json({ message: error });
       }
+      res.status(200).json({ data: data.users });
     });
-
-    res.status(200).json(userdb.users);
   });
 });
 
