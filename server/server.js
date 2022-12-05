@@ -117,8 +117,10 @@ server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
   const user = userdb.users.find((user) => user.email === email);
 
-  if (!user) {
-    return res.status(404).json({ message: "Incorrect Email or Password" });
+  if (!isRegistered({ email })) {
+    const status = 404;
+    const message = "user is not registred";
+    return res.status(status).json({ message });
   } else {
     bcrypt.compare(password, user.password).then((matched) => {
       if (!matched) {
