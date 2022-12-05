@@ -113,17 +113,21 @@ const isAuthenticated = async (req, res, next) => {
 
 // it works fine
 // without adding user to the db.json
-server.post("/api/auth/login", (req, res) => {
+server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = userdb.users.find(
-    (user) => user.email === email && user.password === password
-  );
+  const user = userdb.users.find((user) => user.email === email);
 
   if (!user) {
     return res.status(404).json({ message: "Incorrect Email or Password" });
   } else {
-    const access_token = createToken({ id: user.id });
-    return res.status(200).json({ user: user, token: access_token });
+    bcrypt.compare(password, user.password).then((matched) => {
+      if (!matched) {
+        return res.status(401).json({ message: "Invalid Password" });
+      }
+
+      const access_token = createToken({ id: user.id });
+      return res.status(200).json({ user: user, token: access_token });
+    });
   }
 });
 
