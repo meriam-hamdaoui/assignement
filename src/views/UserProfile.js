@@ -1,8 +1,11 @@
+import { isAuth } from "components/helpers/authantication";
 import React from "react";
-// react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 
-function User() {
+const User = () => {
+  const { user, token } = isAuth("user", "token");
+  const { firstName, lastName, phone, country, email, password } = user;
+
   return (
     <>
       <Container fluid>
@@ -15,7 +18,7 @@ function User() {
               <Card.Body>
                 <Form>
                   <Row>
-                    <Col className="pl-1" md="10">
+                    <Col className="pl-1" md="7">
                       <Form.Group>
                         <label htmlFor="exampleInputEmail1">
                           Email address
@@ -23,8 +26,19 @@ function User() {
                         <Form.Control
                           placeholder="Email"
                           type="email"
+                          defaultValue={email}
                           disabled
-                        ></Form.Control>
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col className="pl-1" md="4">
+                      <Form.Group>
+                        <label htmlFor="phone">Phone</label>
+                        <Form.Control
+                          placeholder="Phone"
+                          type="phone"
+                          defaultValue={phone}
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -33,9 +47,10 @@ function User() {
                       <Form.Group>
                         <label>First Name</label>
                         <Form.Control
-                          placeholder="Company"
+                          placeholder="first Name"
                           type="text"
-                        ></Form.Control>
+                          defaultValue={firstName}
+                        />
                       </Form.Group>
                     </Col>
                     <Col className="pl-1" md="6">
@@ -44,7 +59,8 @@ function User() {
                         <Form.Control
                           placeholder="Last Name"
                           type="text"
-                        ></Form.Control>
+                          defaultValue={lastName}
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -55,7 +71,8 @@ function User() {
                         <Form.Control
                           placeholder="Country"
                           type="text"
-                        ></Form.Control>
+                          defaultValue={country}
+                        />
                       </Form.Group>
                     </Col>
                     <Col md="8">
@@ -65,7 +82,7 @@ function User() {
                           defaultValue="Bld, nr. 8 Bl 1, Sc 1, Ap 09"
                           placeholder="Home Address"
                           type="text"
-                        ></Form.Control>
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -80,7 +97,7 @@ function User() {
                           placeholder="Here can be your description"
                           rows="4"
                           as="textarea"
-                        ></Form.Control>
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -112,9 +129,9 @@ function User() {
                       className="avatar border-gray"
                       src={require("assets/img/default-avatar.png")}
                     ></img>
-                    {/* <h5 className="title">{firstName + " " + lastName}</h5> */}
+                    <h5 className="title">{firstName + " " + lastName}</h5>
                   </a>
-                  {/* <p className="description">{firstName + "123"}</p> */}
+                  <p className="description">{firstName + "123"}</p>
                 </div>
                 <p className="description ">
                   Pellentesque habitant morbi tristique senectus et netus et
@@ -157,6 +174,6 @@ function User() {
       </Container>
     </>
   );
-}
+};
 
 export default User;

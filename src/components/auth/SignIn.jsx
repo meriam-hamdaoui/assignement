@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, setUsers } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import bcrypt from "bcryptjs-react";
 import { loginAPI } from "../../api/CRUD";
 import { setUserAuth } from "components/helpers/authantication";
 
@@ -31,7 +29,7 @@ const SignIn = () => {
             setUserAuth("token", token);
             setUserAuth("user", user);
             dispatch(login({ email: email, password: password }));
-            navigate("/profile", { replace: true });
+            navigate(`/profile/${user.id}`, { replace: true });
           }
         })
         .catch((error) => alert("error", error.response.data.message));

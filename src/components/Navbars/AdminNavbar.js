@@ -21,6 +21,7 @@ import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import routes from "routes.js";
 import { logout } from "../../JS/userReducer";
 import { useDispatch } from "react-redux";
+import { deleteStorage } from "../helpers/authantication";
 
 function Header() {
   const location = useLocation();
@@ -49,8 +50,8 @@ function Header() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/", { replace: true });
+    deleteStorage("user", "token");
+    dispatch(logout(navigate("/", { replace: true })));
   };
 
   return (

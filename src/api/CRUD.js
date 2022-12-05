@@ -21,7 +21,7 @@ export const registerAPI = async (value) => {
   return response;
 };
 
-export const loginAPI = async (value, token) => {
+export const loginAPI = async (value) => {
   const response = await axios.post(`${REACT_APP_URL}/api/auth/login`, value, {
     header: {
       "Content-Type": "application/json",
@@ -29,6 +29,12 @@ export const loginAPI = async (value, token) => {
   });
   return response;
 };
+
+export const getUserAPI = async (id) => {
+  const { data } = await axios.get(`${REACT_APP_URL}/api/users/${id}`);
+  return data;
+};
+
 export const updateProfileAPI = async (id, value) => {
   return await axios.delete(`${REACT_APP_URL}/users/${id}`, value);
 };
