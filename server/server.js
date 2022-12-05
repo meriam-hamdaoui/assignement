@@ -76,15 +76,6 @@ server.post("/api/auth/register", (req, res) => {
   // const access_token = createToken({ email, password });
 });
 
-// signin
-// const isLoginAuthenticated = ({ email, password }) => {
-//   return (
-//     userdb.users.findIndex(
-//       (user) => user.email === email && user.password === password
-//     ) !== -1
-//   );
-// };
-
 const isAuthenticated = async (req, res, next) => {
   try {
     const token = req.header("Authorization");
@@ -120,11 +111,6 @@ const isAuthenticated = async (req, res, next) => {
 // without adding user to the db.json
 server.post("/api/auth/login", (req, res) => {
   const { email, password } = req.body;
-  // if (!isLoginAuthenticated({ email, password })) {
-  //   const status = 401;
-  //   const message = ;
-  //   return res.status(status).json({ status, message });
-  // }
   const user = userdb.users.find(
     (user) => user.email === email && user.password === password
   );
@@ -197,11 +183,51 @@ server.get("/api/users/:id", isAuthenticated, (req, res) => {
 
 // req test for middleware auth
 // try to change the auth middleware
-server.put(
-  "/api/users/update/:id",
-  (req, res, next) => {},
-  (req, res) => {}
-);
+server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
+  const { id } = req.params;
+  const token = req.header("Authorization");
+  const { id: _id, email, password } = req.user;
+  const { firstName, lastName, phone, country } = req.body;
+
+  fs.readFile("./db.json", (error, data) => {
+    if (error) {
+      const status = 401;
+      const message = error;
+      return res.status(status).json({ status, message });
+    }
+
+    data = JSON.parse(data.toString());
+
+    if (token && Number(_id) === Number(id)) {
+      const userIndex = data.users.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
+
+      const updateUser = {
+        firstName: firstName,
+        lastName: lastName,
+        phoneame: phone,
+        country: country,
+      };
+
+      data.users[userIndex] = {
+        id: _id,
+        email: email,
+        password: password,
+        ...updateUser,
+      };
+
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) {
+          return res.status(401).json({ message: error });
+        }
+        return res.status(200).json({ updateUser: data.users[userIndex] });
+      });
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
+  });
+});
 
 server.listen(5000, () => {
   console.log("Running fake api json server");
