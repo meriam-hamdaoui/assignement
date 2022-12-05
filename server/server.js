@@ -234,12 +234,48 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
         if (error) {
           return res.status(401).json({ message: error });
         }
-        return res
-          .status(200)
-          .json({
-            message: "password updated with success",
-            newPwd: data.users[userIndex],
-          });
+        return res.status(200).json({
+          message: "password updated with success",
+          newPwd: data.users[userIndex],
+        });
+      });
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
+  });
+});
+
+server.put("/api/users/passwordforgoten/:id", (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  fs.readFile("./db.json", (error, data) => {
+    if (error) {
+      const status = 401;
+      const message = error;
+      return res.status(status).json({ status, message });
+    }
+
+    data = JSON.parse(data.toString());
+
+    const userIndex = data.users.findIndex(
+      (el) => Number(el.id) === Number(id)
+    );
+
+    if (userIndex > -1) {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+
+      data.users[userIndex] = { ...data.users[userIndex], password: hash };
+
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) {
+          return res.status(401).json({ message: error });
+        }
+        return res.status(200).json({
+          message: "password changed with success",
+          newPwd: data.users[userIndex],
+        });
       });
     } else {
       return res.status(401).json({ message: "unauthorized" });
