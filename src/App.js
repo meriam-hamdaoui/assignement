@@ -7,6 +7,7 @@ import TableList from "views/TableList";
 import Typography from "views/Typography";
 import Icons from "views/Icons";
 import Notifications from "views/Notifications";
+import Error from "views/Error";
 import { Routes, Route } from "react-router-dom";
 import Authentication from "components/auth/Authentication";
 import Private from "./components/Private";
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="notifications" element={<Notifications />} />
           </Route>
         </Route>
+        <Route path="/*" element={<Error />} />
       </Routes>
     </div>
   );

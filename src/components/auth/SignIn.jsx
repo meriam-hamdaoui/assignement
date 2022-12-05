@@ -17,41 +17,12 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const fetchUserAPI = async () => {
-    const { data } = await axios.get(`${REACT_APP_URL}/users`);
-    dispatch(setUsers([...data]));
-  };
-
-  useEffect(() => {
-    fetchUserAPI().catch((error) => console.error("error", error));
-  }, []);
-
   const handleSubmit = async () => {
     if (!email || !password) {
-      alert("all fields are required");
-      return;
+      return alert("all fields are required");
     } else if (email.indexOf("@") === -1) {
-      alert("enter a valid email");
-      return;
+      return alert("enter a valid email");
     }
-
-    const userExist = userList.find((user) => user.email === email);
-    console.log("userExist", userExist.password);
-
-    if (!userExist) {
-      alert("there is no such user with those cridentials");
-      return;
-    }
-
-    bcrypt.compare(password, userExist.password).then(async (isMatch) => {
-      console.log("matched", isMatch);
-      if (!isMatch) {
-        alert("passwords mismatch");
-        return;
-      }
-      if (isMatch) {
-      }
-    });
   };
 
   return (

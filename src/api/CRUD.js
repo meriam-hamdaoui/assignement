@@ -10,7 +10,7 @@ export const fetchUserAPI = async () => {
 
 export const registerAPI = async (value) => {
   const response = await axios.post(
-    `${REACT_APP_URL}/users/register`,
+    `${REACT_APP_URL}/api/auth/register`,
     { ...value },
     {
       header: {
