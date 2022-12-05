@@ -25,12 +25,11 @@ server.get("/api/users", (req, res) => {
     if (err) {
       const status = 401;
       const message = error;
-      res.status(status).json({ status, message });
-      return;
+      return res.status(status).json({ status, message });
     }
     data = JSON.parse(data.toString());
 
-    res.status(200).json(data.users);
+    return res.status(200).json(data.users);
   });
 });
 
@@ -44,16 +43,14 @@ server.post("/api/auth/register", (req, res) => {
   if (isRegisterAuthenticated({ email })) {
     const status = 401;
     const message = "Email already exist";
-    res.status(status).json({ status, message });
-    return;
+    return res.status(status).json({ status, message });
   }
 
   fs.readFile("./db.json", (err, data) => {
     if (err) {
       const status = 401;
       const message = err;
-      res.status(status).json({ status, message });
-      return;
+      return res.status(status).json({ status, message });
     }
 
     data = JSON.parse(data.toString());
@@ -70,91 +67,131 @@ server.post("/api/auth/register", (req, res) => {
       if (err) {
         const status = 401;
         const message = err;
-        res.status(status).json({ status, message });
-        return;
+        return res.status(status).json({ status, message });
       }
     });
-    res.status(200).json({ newUser: req.body, users: data.users });
+    return res.status(200).json({ newUser: req.body, users: data.users });
   });
 
   // const access_token = createToken({ email, password });
 });
 
 // signin
-const isLoginAuthenticated = ({ email, password }) => {
-  return (
-    userdb.users.findIndex(
-      (user) => user.email === email && user.password === password
-    ) !== -1
-  );
+// const isLoginAuthenticated = ({ email, password }) => {
+//   return (
+//     userdb.users.findIndex(
+//       (user) => user.email === email && user.password === password
+//     ) !== -1
+//   );
+// };
+
+const isAuthenticated = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization");
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "you are not authorized to perceed" });
+    } else {
+      return jwt.verify(token, SECRET_KEY, async (error, decoder) => {
+        if (error)
+          return res.status(401).json({ message: "failed to authenticate" });
+
+        if (!decoder)
+          return res
+            .status(404)
+            .json({ message: "no such user, sign up first" });
+
+        const user = userdb.users.find((el) => el.id === decoder.id);
+
+        req.user = { ...user };
+
+        return next();
+      });
+    }
+  } catch (error) {
+    console.error("authentication error =>", error);
+    return res.status(500).json({ message: "authentication error" });
+  }
 };
 
 // it works fine
 // without adding user to the db.json
 server.post("/api/auth/login", (req, res) => {
   const { email, password } = req.body;
-
-  if (!isLoginAuthenticated({ email, password })) {
-    const status = 401;
-    const message = "Incorrect Email or Password";
-    res.status(status).json({ status, message });
-    return;
-  }
-  const user = userdb.users.filter(
+  // if (!isLoginAuthenticated({ email, password })) {
+  //   const status = 401;
+  //   const message = ;
+  //   return res.status(status).json({ status, message });
+  // }
+  const user = userdb.users.find(
     (user) => user.email === email && user.password === password
   );
-  const access_token = createToken({ email, password });
 
-  res.status(200).json({ user: user, token: access_token });
+  if (!user) {
+    return res.status(404).json({ message: "Incorrect Email or Password" });
+  } else {
+    const access_token = createToken({ id: user.id });
+    return res.status(200).json({ user: user, token: access_token });
+  }
 });
 
 // delete a user
-server.delete("/api/auth/delete/:id", (req, res) => {
+server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
+  const token = req.header("Authorization");
+  const user = req.user;
 
   fs.readFile("./db.json", (error, data) => {
     if (error) {
       const status = 401;
       const message = error;
-      res.status(status).json({ status, message });
-      return;
+      return res.status(status).json({ status, message });
     }
 
     data = JSON.parse(data.toString());
 
-    const userIndex = data.users.findIndex(
-      (user) => Number(user.id) === Number(id)
-    );
-
-    data.users.splice(userIndex, 1);
-
-    fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-      if (error) {
-        return res.status(401).json({ message: error });
-      }
-      res.status(200).json({ data: data.users });
-    });
+    if (token && Number(user.id) === Number(id)) {
+      const userIndex = data.users.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
+      data.users.splice(userIndex, 1);
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) {
+          return res.status(401).json({ message: error });
+        }
+        return res.status(200).json({ data: data.users });
+      });
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
   });
 });
 
 // get user by id
-server.get("/api/users/:id", (req, res) => {
+server.get("/api/users/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
+  const token = req.header("authorization");
+  const user = req.user;
 
   fs.readFile("./db.json", (err, data) => {
     if (err) {
       const status = 401;
       const message = err;
-      res.status(status).json({ status, message });
-      return;
+      return res.status(status).json({ status, message });
     }
-    data = JSON.parse(data.toString());
+    if (token && Number(user.id) === Number(id)) {
+      data = JSON.parse(data.toString());
 
-    const userIndex = data.users.findIndex(
-      (user) => Number(user.id) === Number(id)
-    );
+      const userIndex = data.users.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
 
-    res.status(200).json(data.users[userIndex]);
+      return res.status(200).json(data.users[userIndex]);
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
   });
 });
 
