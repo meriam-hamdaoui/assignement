@@ -4,7 +4,8 @@ import { login, setUsers } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import bcrypt from "bcryptjs-react";
-import { loginAPI, REACT_APP_URL } from "../../api/CRUD";
+import { loginAPI } from "../../api/CRUD";
+import { setUserAuth } from "components/helpers/authantication";
 
 const SignIn = () => {
   const userList = useSelector((state) => state.user);
@@ -22,6 +23,18 @@ const SignIn = () => {
       return alert("all fields are required");
     } else if (email.indexOf("@") === -1) {
       return alert("enter a valid email");
+    } else {
+      await loginAPI({ email, password })
+        .then((response) => {
+          if (response) {
+            const { message, token, user } = response.data;
+            setUserAuth("token", token);
+            setUserAuth("user", user);
+            dispatch(login({ email: email, password: password }));
+            navigate("/profile", { replace: true });
+          }
+        })
+        .catch((error) => alert("error", error.response.data.message));
     }
   };
 

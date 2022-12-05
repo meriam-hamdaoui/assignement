@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { register } from "../../JS/userReducer";
 import { countries } from "components/helpers/constants";
 import { registerAPI } from "api/CRUD";
-import { Axios, AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const userList = useSelector((state) => state.user);
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [country, setCountry] = useState("");
@@ -17,13 +15,14 @@ const SignUp = () => {
   const [showPwd, setShowPwd] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     // check if all fields are fullfiled
     if (!firstName || !lastName || !phone || !country || !email || !password) {
       return alert("all fields are required");
       // check validation email
-    } else if (email.indexOf("@") === -1) {
+    } else if (email.indexOf("@") === -1 || email.lastIndexOf(".") === -1) {
       return alert("enter a valid email");
     } else {
       await registerAPI({
@@ -42,7 +41,7 @@ const SignUp = () => {
             window.location.reload(true);
           }
         })
-        .catch((error) => alert(error.message));
+        .catch((error) => alert(error.response.data.message));
     }
   };
 
