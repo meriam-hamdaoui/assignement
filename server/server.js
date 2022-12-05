@@ -1,8 +1,10 @@
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const jsonServer = require("json-server");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+// third partie
+const { createToken, isAuthenticated, isRegistered } = require("./helpers");
 
 const server = jsonServer.create();
 const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
@@ -10,14 +12,6 @@ const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 server.use(jsonServer.defaults());
-
-const SECRET_KEY = "72676376";
-const expiresIn = "1h";
-
-// create token
-const createToken = (payload) => {
-  return jwt.sign(payload, SECRET_KEY, { expiresIn });
-};
 
 // get all users
 server.get("/api/users", (req, res) => {
@@ -32,11 +26,6 @@ server.get("/api/users", (req, res) => {
     return res.status(200).json(data.users);
   });
 });
-
-// sign up
-const isRegistered = ({ email }) => {
-  return userdb.users.findIndex((user) => user.email === email) !== -1;
-};
 
 server.post("/api/auth/register", (req, res) => {
   const { email } = req.body;
@@ -74,45 +63,12 @@ server.post("/api/auth/register", (req, res) => {
         return res.status(status).json({ status, message });
       }
     });
-    return res.status(200).json({ newUser: newUser });
+    return res
+      .status(200)
+      .json({ message: "user registred with success", newUser: newUser });
   });
-
-  // const access_token = createToken({ email, password });
 });
 
-const isAuthenticated = async (req, res, next) => {
-  try {
-    const token = req.header("Authorization");
-
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "you are not authorized to perceed" });
-    } else {
-      return jwt.verify(token, SECRET_KEY, async (error, decoder) => {
-        if (error)
-          return res.status(401).json({ message: "failed to authenticate" });
-
-        if (!decoder)
-          return res
-            .status(404)
-            .json({ message: "no such user, sign up first" });
-
-        const user = userdb.users.find((el) => el.id === decoder.id);
-
-        req.user = { ...user };
-
-        return next();
-      });
-    }
-  } catch (error) {
-    console.error("authentication error =>", error);
-    return res.status(500).json({ message: "authentication error" });
-  }
-};
-
-// it works fine
-// without adding user to the db.json
 server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
   const user = userdb.users.find((user) => user.email === email);
@@ -128,7 +84,11 @@ server.post("/api/auth/login", async (req, res) => {
       }
 
       const access_token = createToken({ id: user.id });
-      return res.status(200).json({ user: user, token: access_token });
+      return res.status(200).json({
+        message: `welcome ${user.firstName} ${user.lastName}`,
+        user: user,
+        token: access_token,
+      });
     });
   }
 });
@@ -157,7 +117,9 @@ server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
         if (error) {
           return res.status(401).json({ message: error });
         }
-        return res.status(200).json({ data: data.users });
+        return res
+          .status(200)
+          .json({ message: "user deleted with success", data: data.users });
       });
     } else {
       return res.status(401).json({ message: "unauthorized" });
@@ -231,7 +193,10 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
         if (error) {
           return res.status(401).json({ message: error });
         }
-        return res.status(200).json({ updateUser: data.users[userIndex] });
+        return res.status(200).json({
+          message: "user updated with success",
+          updateUser: data.users[userIndex],
+        });
       });
     } else {
       return res.status(401).json({ message: "unauthorized" });
@@ -269,7 +234,12 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
         if (error) {
           return res.status(401).json({ message: error });
         }
-        return res.status(200).json({ newPwd: data.users[userIndex] });
+        return res
+          .status(200)
+          .json({
+            message: "password updated with success",
+            newPwd: data.users[userIndex],
+          });
       });
     } else {
       return res.status(401).json({ message: "unauthorized" });
