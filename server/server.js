@@ -74,7 +74,7 @@ server.post("/api/auth/register", (req, res) => {
         return res.status(status).json({ status, message });
       }
     });
-    return res.status(200).json({ newUser: req.body, users: data.users });
+    return res.status(200).json({ newUser: newUser });
   });
 
   // const access_token = createToken({ email, password });
@@ -232,6 +232,44 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
           return res.status(401).json({ message: error });
         }
         return res.status(200).json({ updateUser: data.users[userIndex] });
+      });
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
+  });
+});
+
+// password
+server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
+  const { id } = req.params;
+  const token = req.header("Authorization");
+  const { id: _id } = req.user;
+  const { password } = req.body;
+
+  fs.readFile("./db.json", (error, data) => {
+    if (error) {
+      const status = 401;
+      const message = error;
+      return res.status(status).json({ status, message });
+    }
+
+    data = JSON.parse(data.toString());
+
+    if (token && Number(_id) === Number(id)) {
+      const userIndex = data.users.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
+
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+
+      data.users[userIndex] = { ...data.users[userIndex], password: hash };
+
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) {
+          return res.status(401).json({ message: error });
+        }
+        return res.status(200).json({ newPwd: data.users[userIndex] });
       });
     } else {
       return res.status(401).json({ message: "unauthorized" });
