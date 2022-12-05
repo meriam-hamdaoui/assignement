@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 const initialState = [
   {
     id: uuidv4(),
-    firstName: "user1",
-    lastName: "user1",
+    firstName: "user0",
+    lastName: "user0",
     phone: "98765432",
     country: "Afghanistan",
-    email: "user1@example.com",
+    email: "user0@example.com",
     password: "123456",
   },
 ];
@@ -33,8 +33,23 @@ const userSlice = createSlice({
     setUsers: (state, action) => {
       return action.payload;
     },
+    updateUser: (state, action) => {
+      const modifier = {
+        ...action.payload,
+      };
+      return state.map((user) => {
+        if (user.id === action.payload.id) {
+          return {
+            ...user,
+            ...modifier,
+          };
+        }
+        return user;
+      });
+    },
   },
 });
 
-export const { login, logout, register, setUsers } = userSlice.actions;
+export const { login, logout, register, setUsers, updateUser } =
+  userSlice.actions;
 export default userSlice.reducer;

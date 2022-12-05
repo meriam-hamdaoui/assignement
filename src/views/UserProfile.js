@@ -1,10 +1,31 @@
 import { isAuth } from "components/helpers/authantication";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import { updateProfileAPI } from "../api/CRUD";
+import { updateUser } from "JS/userReducer";
 
 const User = () => {
   const { user, token } = isAuth("user", "token");
-  const { firstName, lastName, phone, country, email, password } = user;
+  const { id, firstName, lastName, phone, country, email, password } = user;
+
+  const [newFirstName, setNewFirstName] = useState(firstName);
+  const [newLastName, setNewLastName] = useState(lastName);
+  const [newPhone, setNewPhone] = useState(phone);
+  const [newCountry, setNewCountry] = useState(country);
+
+  const handleUpdate = async () => {
+    await updateProfileAPI(id, {
+      id: id,
+      email: email,
+      password: password,
+      firstName: newFirstName,
+      lastName: newLastName,
+      phone: newPhone,
+      country: newCountry,
+    })
+      .then((response) => console.log("response", response))
+      .catch((error) => console.error("error", error.response.data.message));
+  };
 
   return (
     <>
@@ -38,6 +59,7 @@ const User = () => {
                           placeholder="Phone"
                           type="phone"
                           defaultValue={phone}
+                          onChange={(e) => setNewPhone(e.target.value)}
                         />
                       </Form.Group>
                     </Col>
@@ -50,6 +72,7 @@ const User = () => {
                           placeholder="first Name"
                           type="text"
                           defaultValue={firstName}
+                          onChange={(e) => setNewFirstName(e.target.value)}
                         />
                       </Form.Group>
                     </Col>
@@ -60,6 +83,7 @@ const User = () => {
                           placeholder="Last Name"
                           type="text"
                           defaultValue={lastName}
+                          onChange={(e) => setNewLastName(e.target.value)}
                         />
                       </Form.Group>
                     </Col>
@@ -72,6 +96,7 @@ const User = () => {
                           placeholder="Country"
                           type="text"
                           defaultValue={country}
+                          onChange={(e) => setNewCountry(e.target.value)}
                         />
                       </Form.Group>
                     </Col>
@@ -82,6 +107,7 @@ const User = () => {
                           defaultValue="Bld, nr. 8 Bl 1, Sc 1, Ap 09"
                           placeholder="Home Address"
                           type="text"
+                          disabled
                         />
                       </Form.Group>
                     </Col>
@@ -97,14 +123,16 @@ const User = () => {
                           placeholder="Here can be your description"
                           rows="4"
                           as="textarea"
+                          disabled
                         />
                       </Form.Group>
                     </Col>
                   </Row>
                   <Button
                     className="btn-fill pull-right"
-                    type="submit"
+                    type="button"
                     variant="info"
+                    onClick={() => token && handleUpdate()}
                   >
                     Update Profile
                   </Button>

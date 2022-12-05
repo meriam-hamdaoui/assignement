@@ -36,7 +36,7 @@ export const getUserAPI = async (id) => {
 };
 
 export const updateProfileAPI = async (id, value) => {
-  return await axios.delete(`${REACT_APP_URL}/users/${id}`, value);
+  return await axios.put(`${REACT_APP_URL}/api/users/update/${id}`, value);
 };
 export const changePasswordAPI = async () => {};
 export const deleteProfileAPI = async (id) => {
