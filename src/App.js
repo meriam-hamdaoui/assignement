@@ -9,6 +9,7 @@ import Icons from "views/Icons";
 import Notifications from "views/Notifications";
 import { Routes, Route } from "react-router-dom";
 import Authentication from "components/auth/Authentication";
+import Private from "./components/Private";
 
 const App = () => {
   return (
@@ -16,16 +17,16 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Authentication />} />
-        <Route path="profile" element={<AdminLayout />}>
-          {/* <Route index element={<AdminLayout />} /> */}
-          <Route index element={<Dashboard />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="user" element={<User />} />
-          <Route path="table" element={<TableList />} />
-          <Route path="typography" element={<Typography />} />
-          <Route path="icons" element={<Icons />} />
-
-          <Route path="notifications" element={<Notifications />} />
+        <Route element={<Private />}>
+          <Route path="profile" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="user" element={<User />} />
+            <Route path="table" element={<TableList />} />
+            <Route path="typography" element={<Typography />} />
+            <Route path="icons" element={<Icons />} />
+            <Route path="notifications" element={<Notifications />} />
+          </Route>
         </Route>
       </Routes>
     </div>

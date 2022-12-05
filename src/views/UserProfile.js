@@ -3,11 +3,6 @@ import React from "react";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 
 function User() {
-  const user = JSON.parse(localStorage.getItem("loggedIn"));
-  // console.log("localStorage user", user);
-
-  const { firstName, lastName, phone, country, email } = user.user;
-
   return (
     <>
       <Container fluid>
@@ -28,7 +23,6 @@ function User() {
                         <Form.Control
                           placeholder="Email"
                           type="email"
-                          defaultValue={email}
                           disabled
                         ></Form.Control>
                       </Form.Group>
@@ -39,7 +33,6 @@ function User() {
                       <Form.Group>
                         <label>First Name</label>
                         <Form.Control
-                          defaultValue={firstName}
                           placeholder="Company"
                           type="text"
                         ></Form.Control>
@@ -49,7 +42,6 @@ function User() {
                       <Form.Group>
                         <label>Last Name</label>
                         <Form.Control
-                          defaultValue={lastName}
                           placeholder="Last Name"
                           type="text"
                         ></Form.Control>
@@ -61,7 +53,6 @@ function User() {
                       <Form.Group>
                         <label>Country</label>
                         <Form.Control
-                          defaultValue={country}
                           placeholder="Country"
                           type="text"
                         ></Form.Control>
@@ -121,9 +112,9 @@ function User() {
                       className="avatar border-gray"
                       src={require("assets/img/default-avatar.png")}
                     ></img>
-                    <h5 className="title">{firstName + " " + lastName}</h5>
+                    {/* <h5 className="title">{firstName + " " + lastName}</h5> */}
                   </a>
-                  <p className="description">{firstName + "123"}</p>
+                  {/* <p className="description">{firstName + "123"}</p> */}
                 </div>
                 <p className="description ">
                   Pellentesque habitant morbi tristique senectus et netus et
