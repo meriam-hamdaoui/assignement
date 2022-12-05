@@ -2,7 +2,7 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const jsonServer = require("json-server");
 const jwt = require("jsonwebtoken");
-// const { data } = require("jquery");
+const bcrypt = require("bcryptjs");
 
 const server = jsonServer.create();
 const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
@@ -34,13 +34,13 @@ server.get("/api/users", (req, res) => {
 });
 
 // sign up
-const isRegisterAuthenticated = ({ email }) => {
+const isRegistered = ({ email }) => {
   return userdb.users.findIndex((user) => user.email === email) !== -1;
 };
 
 server.post("/api/auth/register", (req, res) => {
   const { email } = req.body;
-  if (isRegisterAuthenticated({ email })) {
+  if (isRegistered({ email })) {
     const status = 401;
     const message = "Email already exist";
     return res.status(status).json({ status, message });
@@ -57,10 +57,14 @@ server.post("/api/auth/register", (req, res) => {
 
     let last_item_id = data.users[data.users.length - 1].id;
 
-    const newUser = {
-      id: last_item_id + 1,
-      ...req.body,
-    };
+    let newUser = { ...req.body };
+
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(newUser.password, salt);
+
+    newUser.password = hash;
+
+    newUser = { ...newUser, id: last_item_id + 1, password: newUser.password };
 
     data.users.push(newUser);
     fs.writeFile("./db.json", JSON.stringify(data), (err, result) => {
