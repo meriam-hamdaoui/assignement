@@ -56,6 +56,14 @@ export const changePasswordAPI = async (id, value, token) => {
     },
   });
 };
+export const passwordForgoten = async (value) => {
+  return await axios.put(`${REACT_APP_URL}/api/users/forget_password`, value, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const deleteProfileAPI = async (id) => {
   return await axios.delete(`${REACT_APP_URL}/users/${id}`);
 };

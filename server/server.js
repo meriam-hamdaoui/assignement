@@ -201,7 +201,7 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   });
 });
 
-// password
+// password update
 server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
@@ -241,10 +241,9 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
     }
   });
 });
-
-server.put("/api/users/passwordforgoten/:id", (req, res) => {
-  const { id } = req.params;
-  const { password } = req.body;
+// password forget
+server.put("/api/users/forget_password", (req, res) => {
+  const { email, password } = req.body;
 
   fs.readFile("./db.json", (error, data) => {
     if (error) {
@@ -255,9 +254,7 @@ server.put("/api/users/passwordforgoten/:id", (req, res) => {
 
     data = JSON.parse(data.toString());
 
-    const userIndex = data.users.findIndex(
-      (el) => Number(el.id) === Number(id)
-    );
+    const userIndex = data.users.findIndex((el) => el.email === email);
 
     if (userIndex > -1) {
       const salt = bcrypt.genSaltSync(10);

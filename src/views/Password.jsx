@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { CgPassword } from "react-icons/cg";
-import { changePasswordAPI } from "../api/CRUD";
+import { changePasswordAPI, passwordForgoten } from "../api/CRUD";
 import { isAuth } from "components/helpers/authantication";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { deleteStorage } from "../components/helpers/authantication";
 
 const styleUpdate = { background: "none", border: "none" };
 
@@ -26,10 +27,24 @@ const Password = () => {
 
   const { user, token } = isAuth("user", "token");
 
+  const navigate = useNavigate();
+
   const handelSave = async () => {
-    await changePasswordAPI(id, newPassword, token)
-      .then((response) => alert(response.data.message))
-      .catch((error) => console.error(error.response.data.message));
+    if (currentLocation !== "/login") {
+      await changePasswordAPI(user.id, newPassword, token)
+        .then((response) => {
+          alert(response.data.message);
+          deleteStorage("user", "token");
+          navigate("/login", { replace: true });
+        })
+        .catch((error) => console.error(error.response.data.message));
+    }
+    if (currentLocation === "/login") {
+      await passwordForgoten(newPassword).then((response) => {
+        alert(response.data.message);
+        window.location.reload();
+      });
+    }
   };
 
   return (
@@ -53,12 +68,30 @@ const Password = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Change Password</Modal.Title>
+          <Modal.Title>
+            {currentLocation === "/login"
+              ? "Change Password"
+              : "Update Password"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Row>
-              <Col>
+            <>
+              {currentLocation === "/login" && (
+                <Row>
+                  <input
+                    autoComplete="no-fill"
+                    type="text"
+                    name="password"
+                    placeholder="Email"
+                    required
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </Row>
+              )}
+
+              <Row>
                 <input
                   autoComplete="no-fill"
                   type={showPwd ? "text" : "password"}
@@ -82,8 +115,8 @@ const Password = () => {
                   />
                   &nbsp;Show Password
                 </label>
-              </Col>
-            </Row>
+              </Row>
+            </>
           </Form>
         </Modal.Body>
         <Modal.Footer>
