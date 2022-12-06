@@ -175,17 +175,14 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
         (el) => Number(el.id) === Number(id)
       );
 
+      const { user, body } = req;
+
       const updateUser = {
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        country: country,
+        ...user,
+        ...body,
       };
 
       data.users[userIndex] = {
-        id: _id,
-        email: email,
-        password: password,
         ...updateUser,
       };
 
