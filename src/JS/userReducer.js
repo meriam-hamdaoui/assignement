@@ -31,12 +31,12 @@ const userSlice = createSlice({
       return [...state, newUser];
     },
     setUser: (state, action) => {
-      return action.payload;
+      return state.filter((el) => el.id === action.payload.id);
     },
     updateUser: (state, action) => {
       return state.map((user) => {
         if (user.id === action.payload.id) {
-          return { ...state.user, ...action.payload };
+          return { ...state, ...action.payload };
         }
         return user;
       });

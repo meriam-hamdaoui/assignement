@@ -51,7 +51,8 @@ function Header() {
 
   const handleLogout = () => {
     deleteStorage("user", "token");
-    dispatch(logout(navigate("/", { replace: true })));
+    dispatch(logout());
+    navigate("/", { replace: true });
   };
 
   return (

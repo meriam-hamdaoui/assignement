@@ -11,10 +11,8 @@ const HomeNavbar = () => {
         <Navbar.Brand href="/">Home</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          {token ? (
-            <AdminNavbar />
-          ) : (
-            <Nav className="me-auto">
+          {!token && (
+            <Nav className="me-auto" style={{ marginLeft: "85%" }}>
               <Nav.Link href="/login">login</Nav.Link>
             </Nav>
           )}

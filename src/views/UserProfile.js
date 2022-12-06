@@ -18,26 +18,22 @@ const User = () => {
 
   const dispacth = useDispatch();
 
+  const userEdited = {
+    id: id,
+    email: email,
+    password: password,
+    firstName: newFirstName,
+    lastName: newLastName,
+    phone: newPhone,
+    country: newCountry,
+  };
+
   const handleUpdate = async () => {
-    await updateProfileAPI(
-      id,
-      {
-        id: id,
-        email: email,
-        password: password,
-        firstName: newFirstName,
-        lastName: newLastName,
-        phone: newPhone,
-        country: newCountry,
-      },
-      token
-    )
+    await updateProfileAPI(id, userEdited, token)
       .then((response) => {
-        const { data, status } = response;
-        if (status === 200) {
-          dispacth(updateUser(data.updateUser));
-          alert(data.message);
-        }
+        const { message } = response.data;
+        alert(message);
+        fetchProfile();
       })
       .catch((error) => console.error("error", error.response.data.message));
   };
@@ -45,12 +41,12 @@ const User = () => {
   const fetchProfile = async () => {
     const response = await getUserAPI(id, token);
     console.log("response", response);
-    dispacth(setUser({ ...response.user }));
+    // dispacth(setUser({ id, ...response.user }));
   };
 
   useEffect(() => {
     fetchProfile();
-  }, [profile]);
+  }, []);
 
   return (
     <>
