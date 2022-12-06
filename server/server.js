@@ -146,7 +146,7 @@ server.get("/api/users/:id", isAuthenticated, (req, res) => {
         (el) => Number(el.id) === Number(id)
       );
 
-      return res.status(200).json(data.users[userIndex]);
+      return res.status(200).json({ user: data.users[userIndex] });
     } else {
       return res.status(401).json({ message: "unauthorized" });
     }
@@ -178,7 +178,7 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
       const updateUser = {
         firstName: firstName,
         lastName: lastName,
-        phoneame: phone,
+        phone: phone,
         country: country,
       };
 

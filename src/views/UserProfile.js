@@ -1,10 +1,13 @@
+import React, { useState, useEffect } from "react";
 import { isAuth } from "components/helpers/authantication";
-import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { updateProfileAPI, getUserAPI } from "../api/CRUD";
-import { updateUser } from "JS/userReducer";
+import { updateUser, setUser } from "JS/userReducer";
 
 const User = () => {
+  const profile = useSelector((state) => state.user);
+
   const { user, token } = isAuth("user", "token");
   const { id, firstName, lastName, phone, country, email, password } = user;
 
@@ -12,6 +15,8 @@ const User = () => {
   const [newLastName, setNewLastName] = useState(lastName);
   const [newPhone, setNewPhone] = useState(phone);
   const [newCountry, setNewCountry] = useState(country);
+
+  const dispacth = useDispatch();
 
   const handleUpdate = async () => {
     await updateProfileAPI(
@@ -27,9 +32,25 @@ const User = () => {
       },
       token
     )
-      .then((response) => console.log("response", response))
+      .then((response) => {
+        const { data, status } = response;
+        if (status === 200) {
+          dispacth(updateUser(data.updateUser));
+          alert(data.message);
+        }
+      })
       .catch((error) => console.error("error", error.response.data.message));
   };
+
+  const fetchProfile = async () => {
+    const response = await getUserAPI(id, token);
+    console.log("response", response);
+    dispacth(setUser({ ...response.user }));
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [profile]);
 
   return (
     <>

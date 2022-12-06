@@ -30,8 +30,13 @@ export const loginAPI = async (value) => {
   return response;
 };
 
-export const getUserAPI = async (id) => {
-  const { data } = await axios.get(`${REACT_APP_URL}/api/users/${id}`);
+export const getUserAPI = async (id, token) => {
+  const { data } = await axios.get(`${REACT_APP_URL}/api/users/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
   return data;
 };
 
