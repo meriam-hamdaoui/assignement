@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { isAuth } from "components/helpers/authantication";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Form,
+  Container,
+  Row,
+  Col,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { updateProfileAPI, getUserAPI } from "../api/CRUD";
 import { updateUser, setUser } from "JS/userReducer";
+import Password from "./Password";
+
+const renderTooltip = (props) => (
+  <Tooltip id="button-tooltip" {...props}>
+    change password
+  </Tooltip>
+);
 
 const User = () => {
   const profile = useSelector((state) => state.user);
@@ -40,7 +56,7 @@ const User = () => {
 
   const fetchProfile = async () => {
     const response = await getUserAPI(id, token);
-    console.log("response", response);
+    // console.log("response", response);
     // dispacth(setUser({ id, ...response.user }));
   };
 
@@ -191,31 +207,43 @@ const User = () => {
                 </p>
               </Card.Body>
               <hr></hr>
-              <div className="button-container mr-auto ml-auto">
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
+              <div className="d-flex justify-content-between">
+                <div className="button-container mr-auto ml-auto">
+                  <Button
+                    className="btn-simple btn-icon"
+                    href="#pablo"
+                    onClick={(e) => e.preventDefault()}
+                    variant="link"
+                  >
+                    <i className="fab fa-facebook-square"></i>
+                  </Button>
+                  <Button
+                    className="btn-simple btn-icon"
+                    href="#pablo"
+                    onClick={(e) => e.preventDefault()}
+                    variant="link"
+                  >
+                    <i className="fab fa-twitter"></i>
+                  </Button>
+                  <Button
+                    className="btn-simple btn-icon"
+                    href="#pablo"
+                    onClick={(e) => e.preventDefault()}
+                    variant="link"
+                  >
+                    <i className="fab fa-google-plus-square"></i>
+                  </Button>
+                </div>
+
+                <OverlayTrigger
+                  placement="top"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={renderTooltip}
                 >
-                  <i className="fab fa-facebook-square"></i>
-                </Button>
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-twitter"></i>
-                </Button>
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-google-plus-square"></i>
-                </Button>
+                  <div className="button-container mr-auto ml-auto">
+                    <Password password={password} />
+                  </div>
+                </OverlayTrigger>
               </div>
             </Card>
           </Col>

@@ -48,7 +48,14 @@ export const updateProfileAPI = async (id, value, token) => {
     },
   });
 };
-export const changePasswordAPI = async () => {};
+export const changePasswordAPI = async (id, value, token) => {
+  return await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
+};
 export const deleteProfileAPI = async (id) => {
   return await axios.delete(`${REACT_APP_URL}/users/${id}`);
 };
