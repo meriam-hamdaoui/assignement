@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import {
-  Modal,
-  Button,
-  Form,
-  Row,
-  Col,
-  FloatingLabel,
-  InputGroup,
-} from "react-bootstrap";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { CgPassword } from "react-icons/cg";
 import { changePasswordAPI } from "../api/CRUD";
 import { isAuth } from "components/helpers/authantication";
+import { useLocation } from "react-router-dom";
 
-const Password = ({ password }) => {
+const styleUpdate = { background: "none", border: "none" };
+
+const styleForget = {
+  marginLeft: "15rem",
+  marginTop: "1rem",
+  color: "white",
+  ...styleUpdate,
+};
+
+const Password = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -20,9 +22,9 @@ const Password = ({ password }) => {
   const [newPassword, setNewPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
 
+  const currentLocation = useLocation().pathname;
+
   const { user, token } = isAuth("user", "token");
-  console.log("token", token);
-  console.log("user", user);
 
   const handelSave = async () => {
     await changePasswordAPI(id, newPassword, token)
@@ -33,16 +35,20 @@ const Password = ({ password }) => {
   return (
     <>
       <Button
-        style={{ background: "none", border: "none" }}
+        style={currentLocation === "/login" ? styleForget : styleUpdate}
         onClick={handleShow}
       >
-        <CgPassword
-          style={{
-            color: "#0e537d",
-            width: "20px",
-            height: "20px",
-          }}
-        />
+        {currentLocation === "/login" ? (
+          "forget password?"
+        ) : (
+          <CgPassword
+            style={{
+              color: "#0e537d",
+              width: "20px",
+              height: "20px",
+            }}
+          />
+        )}
       </Button>
 
       <Modal show={show} onHide={handleClose}>

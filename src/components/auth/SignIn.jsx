@@ -4,6 +4,7 @@ import { login, setUsers } from "../../JS/userReducer";
 import { useNavigate } from "react-router-dom";
 import { loginAPI } from "../../api/CRUD";
 import { setUserAuth } from "components/helpers/authantication";
+import Password from "views/Password";
 
 const SignIn = () => {
   const userList = useSelector((state) => state.user);
@@ -72,13 +73,16 @@ const SignIn = () => {
           />
           &nbsp;Show Password
         </label>
-
+        <div>
+          <Password />
+        </div>
         <button type="button" className="btn_auth" onClick={handleSubmit}>
           Login
         </button>
       </form>
-      <p style={{ color: "white", marginTop: "10%", marginLeft: "27%" }}>
-        not a user? <label htmlFor="chk">create account</label>
+
+      <p style={{ color: "white", marginTop: "7%", marginLeft: "18%" }}>
+        You don't have an account? <label htmlFor="chk">create account</label>
       </p>
     </div>
   );
