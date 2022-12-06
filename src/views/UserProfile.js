@@ -1,7 +1,7 @@
 import { isAuth } from "components/helpers/authantication";
 import React, { useState } from "react";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
-import { updateProfileAPI } from "../api/CRUD";
+import { updateProfileAPI, getUserAPI } from "../api/CRUD";
 import { updateUser } from "JS/userReducer";
 
 const User = () => {
@@ -14,15 +14,19 @@ const User = () => {
   const [newCountry, setNewCountry] = useState(country);
 
   const handleUpdate = async () => {
-    await updateProfileAPI(id, {
-      id: id,
-      email: email,
-      password: password,
-      firstName: newFirstName,
-      lastName: newLastName,
-      phone: newPhone,
-      country: newCountry,
-    })
+    await updateProfileAPI(
+      id,
+      {
+        id: id,
+        email: email,
+        password: password,
+        firstName: newFirstName,
+        lastName: newLastName,
+        phone: newPhone,
+        country: newCountry,
+      },
+      token
+    )
       .then((response) => console.log("response", response))
       .catch((error) => console.error("error", error.response.data.message));
   };

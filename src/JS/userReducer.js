@@ -34,15 +34,9 @@ const userSlice = createSlice({
       return action.payload;
     },
     updateUser: (state, action) => {
-      const modifier = {
-        ...action.payload,
-      };
       return state.map((user) => {
         if (user.id === action.payload.id) {
-          return {
-            ...user,
-            ...modifier,
-          };
+          return { ...state.user, ...action.payload };
         }
         return user;
       });
