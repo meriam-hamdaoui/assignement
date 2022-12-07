@@ -30,19 +30,19 @@ const Password = () => {
   const navigate = useNavigate();
 
   const handelSave = async () => {
-    if (currentLocation !== "/login") {
-      await changePasswordAPI(user.id, newPassword, token)
-        .then((response) => {
-          alert(response.data.message);
-          deleteStorage("user", "token");
-          navigate("/login", { replace: true });
-        })
-        .catch((error) => console.error(error.response.data.message));
+    if (currentLocation !== "/login" && token) {
+      await changePasswordAPI(user.id, newPassword, token);
+
+      // .then((response) => {
+      //   // alert(response.data.message);
+      //   // deleteStorage("user", "token");
+      //   // navigate("/login", { replace: true });
+      // });
+      // .catch((error) => console.error(error.response.data.message));
     }
     if (currentLocation === "/login") {
       await passwordForgoten(newPassword).then((response) => {
         alert(response.data.message);
-        window.location.reload();
       });
     }
   };

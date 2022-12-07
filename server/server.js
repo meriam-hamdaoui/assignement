@@ -2,6 +2,7 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const jsonServer = require("json-server");
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
 
 // third partie
 const { createToken, isAuthenticated, isRegistered } = require("./helpers");
@@ -12,6 +13,19 @@ const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 server.use(jsonServer.defaults());
+server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+
+// thabet fiha svp
+server.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+  res.header("Access-Control-Max-Age", "3600");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+  );
+  next();
+});
 
 // get all users
 server.get("/api/users", (req, res) => {
