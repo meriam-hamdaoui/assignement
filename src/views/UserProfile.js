@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { updateProfileAPI, getUserAPI } from "../api/CRUD";
-import { updateUser, setUser } from "JS/userReducer";
+import { setUser } from "JS/userReducer";
 import Password from "./Password";
 
 const renderTooltip = (props) => (
@@ -36,6 +36,7 @@ const User = () => {
   const dispacth = useDispatch();
 
   const userEdited = {
+    id: id,
     email: email,
     password: password,
     firstName: newFirstName,
@@ -44,24 +45,24 @@ const User = () => {
     country: newCountry,
   };
 
-  const getProfile = async () => {
+  const getProfile = async (id, token) => {
     const response = await getUserAPI(id, token);
     dispacth(setUser({ id, ...response.user }));
   };
 
   const handleUpdate = async () => {
-    await updateProfileAPI(id, userEdited, token).then((response) => {
-      const message = response.data.message;
-      const userToUpdate = JSON.stringify(response.data.editedUser);
-      alert(message);
-      dispacth(updateUser(id, userToUpdate));
-      getProfile();
+    await updateProfileAPI(id, userEdited, token).then(() => {
+      setUserAuth("user", userEdited);
+      // setUserAuth("token", userEdited.id);
+      // alert("updated with success");
+
+      getProfile(userEdited.id, token);
     });
     // .catch((error) => console.error("error", error.response.data.message));
   };
 
   useEffect(() => {
-    getProfile();
+    getProfile(id, token);
   }, []);
 
   return (

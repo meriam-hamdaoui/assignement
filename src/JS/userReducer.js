@@ -33,17 +33,8 @@ const userSlice = createSlice({
     setUser: (state, action) => {
       return state.filter((el) => el.id === action.payload.id);
     },
-    updateUser: (state, action) => {
-      return state.users.map((user) => {
-        if (user.id === action.payload.id) {
-          return { ...state, ...action.payload };
-        }
-        return user;
-      });
-    },
   },
 });
 
-export const { login, logout, register, setUser, updateUser } =
-  userSlice.actions;
+export const { login, logout, register, setUser } = userSlice.actions;
 export default userSlice.reducer;

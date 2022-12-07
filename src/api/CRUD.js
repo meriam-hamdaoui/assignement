@@ -41,16 +41,12 @@ export const getUserAPI = async (id, token) => {
 };
 
 export const updateProfileAPI = async (id, value, token) => {
-  return await axios.put(
-    `${REACT_APP_URL}/api/users/update/${id}`,
-    { ...value },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    }
-  );
+  await axios.put(`${REACT_APP_URL}/api/users/update/${id}`, value, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
 };
 export const changePasswordAPI = async (id, value, token) => {
   return await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {

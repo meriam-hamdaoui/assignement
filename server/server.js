@@ -131,7 +131,7 @@ server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
 server.get("/api/users/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
-  const user = req.user;
+  // const user = req.user;
 
   fs.readFile("./db.json", (err, data) => {
     if (err) {
@@ -139,26 +139,21 @@ server.get("/api/users/:id", isAuthenticated, (req, res) => {
       const message = err;
       return res.status(status).json({ status, message });
     }
-    if (token && Number(user.id) === Number(id)) {
-      data = JSON.parse(data.toString());
+    data = JSON.parse(data.toString());
 
-      const userIndex = data.users.findIndex(
-        (el) => Number(el.id) === Number(id)
-      );
+    if (token) {
+      const index = data.users.findIndex((el) => Number(el.id) === Number(id));
 
-      return res.status(200).json({ user: data.users[userIndex] });
+      return res.status(200).json({ user: data.users[index] });
     } else {
-      return res.status(401).json({ message: "unauthorized" });
+      return res.status(401).json({ message: "unAuthorized" });
     }
   });
 });
 
-// req test for middleware auth
-// try to change the auth middleware
 server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
-  const { id: _id, email, password } = req.user;
 
   fs.readFile("./db.json", (error, data) => {
     if (error) {
@@ -170,7 +165,7 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
     data = JSON.parse(data.toString());
 
     if (token) {
-      const index = data.users.findIndex((user) => user.email === email);
+      const index = data.users.findIndex((el) => Number(el.id) === Number(id));
 
       data.users[index] = { ...req.user, ...req.body };
 
