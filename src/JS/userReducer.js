@@ -31,7 +31,7 @@ const userSlice = createSlice({
       return [...state, newUser];
     },
     setUser: (state, action) => {
-      return state.filter((el) => el.id === action.payload.id);
+      return action.payload;
     },
   },
 });

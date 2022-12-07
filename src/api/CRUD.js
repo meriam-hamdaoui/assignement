@@ -8,6 +8,7 @@ export const fetchUsersAPI = async () => {
   return data;
 };
 
+// create account
 export const registerAPI = async (value) => {
   const response = await axios.post(
     `${REACT_APP_URL}/api/auth/register`,
@@ -21,6 +22,7 @@ export const registerAPI = async (value) => {
   return response;
 };
 
+// signin
 export const loginAPI = async (value) => {
   const response = await axios.post(`${REACT_APP_URL}/api/auth/login`, value, {
     header: {
@@ -30,6 +32,7 @@ export const loginAPI = async (value) => {
   return response;
 };
 
+// display profile
 export const getUserAPI = async (id, token) => {
   const { data } = await axios.get(`${REACT_APP_URL}/api/users/${id}`, {
     headers: {
@@ -40,6 +43,7 @@ export const getUserAPI = async (id, token) => {
   return data;
 };
 
+// update user data
 export const updateProfileAPI = async (id, value, token) => {
   await axios.put(`${REACT_APP_URL}/api/users/update/${id}`, value, {
     headers: {
@@ -48,22 +52,32 @@ export const updateProfileAPI = async (id, value, token) => {
     },
   });
 };
+
+// modify password
 export const changePasswordAPI = async (id, value, token) => {
-  return await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {
+  await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {
     headers: {
       "Content-Type": "application/json",
       Authorization: token,
     },
   });
 };
+
+// forget password
 export const passwordForgoten = async (value) => {
-  return await axios.put(`${REACT_APP_URL}/api/users/forget_password`, value, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await axios.put(
+    `${REACT_APP_URL}/api/users/forget_password`,
+    value,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
 };
 
+// delete profile
 export const deleteProfileAPI = async (id) => {
-  return await axios.delete(`${REACT_APP_URL}/users/${id}`);
+  await axios.delete(`${REACT_APP_URL}/users/${id}`);
 };

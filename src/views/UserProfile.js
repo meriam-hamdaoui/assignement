@@ -51,14 +51,13 @@ const User = () => {
   };
 
   const handleUpdate = async () => {
-    await updateProfileAPI(id, userEdited, token).then(() => {
-      setUserAuth("user", userEdited);
-      // setUserAuth("token", userEdited.id);
-      // alert("updated with success");
-
-      getProfile(userEdited.id, token);
-    });
-    // .catch((error) => console.error("error", error.response.data.message));
+    await updateProfileAPI(id, userEdited, token)
+      .then(() => {
+        setUserAuth("user", userEdited);
+        alert("updated with success");
+        getProfile(userEdited.id, token);
+      })
+      .catch((error) => console.error("error", error.response.data.message));
   };
 
   useEffect(() => {

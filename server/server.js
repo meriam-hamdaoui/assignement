@@ -27,6 +27,7 @@ server.get("/api/users", (req, res) => {
   });
 });
 
+// create account
 server.post("/api/auth/register", (req, res) => {
   const { email } = req.body;
   if (isRegistered({ email })) {
@@ -69,6 +70,7 @@ server.post("/api/auth/register", (req, res) => {
   });
 });
 
+// signin
 server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
   const user = userdb.users.find((user) => user.email === email);
@@ -93,41 +95,7 @@ server.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// delete a user
-server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
-  const { id } = req.params;
-  const token = req.header("Authorization");
-  const user = req.user;
-
-  fs.readFile("./db.json", (error, data) => {
-    if (error) {
-      const status = 401;
-      const message = error;
-      return res.status(status).json({ status, message });
-    }
-
-    data = JSON.parse(data.toString());
-
-    if (token && Number(user.id) === Number(id)) {
-      const userIndex = data.users.findIndex(
-        (el) => Number(el.id) === Number(id)
-      );
-      data.users.splice(userIndex, 1);
-      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-        if (error) {
-          return res.status(401).json({ message: error });
-        }
-        return res
-          .status(200)
-          .json({ message: "user deleted with success", data: data.users });
-      });
-    } else {
-      return res.status(401).json({ message: "unauthorized" });
-    }
-  });
-});
-
-// get user by id
+// display profile
 server.get("/api/users/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
@@ -151,6 +119,7 @@ server.get("/api/users/:id", isAuthenticated, (req, res) => {
   });
 });
 
+// update user data
 server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
@@ -184,11 +153,10 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   });
 });
 
-// password update
+// modify password
 server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
-  const { id: _id } = req.user;
   const { password } = req.body;
 
   fs.readFile("./db.json", (error, data) => {
@@ -200,15 +168,13 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
 
     data = JSON.parse(data.toString());
 
-    if (token && Number(_id) === Number(id)) {
-      const userIndex = data.users.findIndex(
-        (el) => Number(el.id) === Number(id)
-      );
+    if (token) {
+      const index = data.users.findIndex((el) => Number(el.id) === Number(id));
 
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
 
-      data.users[userIndex] = { ...data.users[userIndex], password: hash };
+      data.users[index] = { ...data.users[index], password: hash };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) {
@@ -216,7 +182,7 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
         }
         return res.status(200).json({
           message: "password updated with success",
-          newPwd: data.users[userIndex],
+          newPwd: data.users[index],
         });
       });
     } else {
@@ -224,7 +190,8 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
     }
   });
 });
-// password forget
+
+// password forgoten
 server.put("/api/users/forget_password", (req, res) => {
   const { email, password } = req.body;
 
@@ -253,6 +220,40 @@ server.put("/api/users/forget_password", (req, res) => {
           message: "password changed with success",
           newPwd: data.users[userIndex],
         });
+      });
+    } else {
+      return res.status(401).json({ message: "unauthorized" });
+    }
+  });
+});
+
+// delete account
+server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
+  const { id } = req.params;
+  const token = req.header("Authorization");
+  const user = req.user;
+
+  fs.readFile("./db.json", (error, data) => {
+    if (error) {
+      const status = 401;
+      const message = error;
+      return res.status(status).json({ status, message });
+    }
+
+    data = JSON.parse(data.toString());
+
+    if (token && Number(user.id) === Number(id)) {
+      const userIndex = data.users.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
+      data.users.splice(userIndex, 1);
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) {
+          return res.status(401).json({ message: error });
+        }
+        return res
+          .status(200)
+          .json({ message: "user deleted with success", data: data.users });
       });
     } else {
       return res.status(401).json({ message: "unauthorized" });
