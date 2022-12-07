@@ -25,15 +25,17 @@ const SignIn = () => {
     } else {
       await loginAPI({ email, password })
         .then((response) => {
-          if (response) {
+          const status = response.status;
+          if (status === 200) {
             const { message, token, user } = response.data;
+            alert(message);
             setUserAuth("token", token);
             setUserAuth("user", user);
             dispatch(login({ email: email, password: password }));
             navigate(`/profile/${user.id}`, { replace: true });
           }
         })
-        .catch((error) => alert("error", error.response.data.message));
+        .catch((error) => alert(error.response.data.message));
     }
   };
 

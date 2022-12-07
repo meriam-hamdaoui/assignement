@@ -18,7 +18,7 @@ server.get("/api/users", (req, res) => {
   fs.readFile("./db.json", (err, data) => {
     if (err) {
       const status = 401;
-      const message = error;
+      const message = err;
       return res.status(status).json({ status, message });
     }
     data = JSON.parse(data.toString());
@@ -76,7 +76,7 @@ server.post("/api/auth/login", async (req, res) => {
   if (!isRegistered({ email })) {
     const status = 404;
     const message = "user is not registred";
-    return res.status(status).json({ message });
+    return res.status(status).json({ message: message });
   } else {
     bcrypt.compare(password, user.password).then((matched) => {
       if (!matched) {
