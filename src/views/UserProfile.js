@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { isAuth } from "components/helpers/authantication";
+import { isAuth, setUserAuth } from "components/helpers/authantication";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Button,
@@ -25,7 +25,8 @@ const User = () => {
   const profile = useSelector((state) => state.user);
 
   const { user, token } = isAuth("user", "token");
-  const { id, firstName, lastName, phone, country, email, password } = user;
+  const { id } = user;
+  const { firstName, lastName, phone, country, email, password } = user;
 
   const [newFirstName, setNewFirstName] = useState(firstName);
   const [newLastName, setNewLastName] = useState(lastName);
@@ -35,7 +36,6 @@ const User = () => {
   const dispacth = useDispatch();
 
   const userEdited = {
-    id: id,
     email: email,
     password: password,
     firstName: newFirstName,
@@ -44,24 +44,24 @@ const User = () => {
     country: newCountry,
   };
 
-  const handleUpdate = async () => {
-    await updateProfileAPI(id, userEdited, token)
-      .then((response) => {
-        const { message } = response.data;
-        alert(message);
-        fetchProfile();
-      })
-      .catch((error) => console.error("error", error.response.data.message));
+  const getProfile = async () => {
+    const response = await getUserAPI(id, token);
+    dispacth(setUser({ id, ...response.user }));
   };
 
-  const fetchProfile = async () => {
-    const response = await getUserAPI(id, token);
-    // console.log("response", response);
-    // dispacth(setUser({ id, ...response.user }));
+  const handleUpdate = async () => {
+    await updateProfileAPI(id, userEdited, token).then((response) => {
+      const message = response.data.message;
+      const userToUpdate = JSON.stringify(response.data.editedUser);
+      alert(message);
+      dispacth(updateUser(id, userToUpdate));
+      getProfile();
+    });
+    // .catch((error) => console.error("error", error.response.data.message));
   };
 
   useEffect(() => {
-    fetchProfile();
+    getProfile();
   }, []);
 
   return (

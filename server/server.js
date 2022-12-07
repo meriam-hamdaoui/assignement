@@ -130,7 +130,7 @@ server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
 // get user by id
 server.get("/api/users/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
-  const token = req.header("authorization");
+  const token = req.header("Authorization");
   const user = req.user;
 
   fs.readFile("./db.json", (err, data) => {
@@ -159,7 +159,6 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
   const { id: _id, email, password } = req.user;
-  const { firstName, lastName, phone, country } = req.body;
 
   fs.readFile("./db.json", (error, data) => {
     if (error) {
@@ -170,21 +169,10 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
 
     data = JSON.parse(data.toString());
 
-    if (token && Number(_id) === Number(id)) {
-      const userIndex = data.users.findIndex(
-        (el) => Number(el.id) === Number(id)
-      );
+    if (token) {
+      const index = data.users.findIndex((user) => user.email === email);
 
-      const { user, body } = req;
-
-      const updateUser = {
-        ...user,
-        ...body,
-      };
-
-      data.users[userIndex] = {
-        ...updateUser,
-      };
+      data.users[index] = { ...req.user, ...req.body };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) {
@@ -192,7 +180,7 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
         }
         return res.status(200).json({
           message: "user updated with success",
-          updateUser: data.users[userIndex],
+          editedUser: data.users[index],
         });
       });
     } else {

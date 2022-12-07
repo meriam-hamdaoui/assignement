@@ -34,7 +34,7 @@ const userSlice = createSlice({
       return state.filter((el) => el.id === action.payload.id);
     },
     updateUser: (state, action) => {
-      return state.map((user) => {
+      return state.users.map((user) => {
         if (user.id === action.payload.id) {
           return { ...state, ...action.payload };
         }

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const REACT_APP_URL = "http://localhost:5000";
 
-export const fetchUserAPI = async () => {
+export const fetchUsersAPI = async () => {
   const { data } = await axios.get(`${REACT_APP_URL}/api/users`);
 
   return data;
@@ -41,12 +41,16 @@ export const getUserAPI = async (id, token) => {
 };
 
 export const updateProfileAPI = async (id, value, token) => {
-  return await axios.put(`${REACT_APP_URL}/api/users/update/${id}`, value, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token,
-    },
-  });
+  return await axios.put(
+    `${REACT_APP_URL}/api/users/update/${id}`,
+    { ...value },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
 };
 export const changePasswordAPI = async (id, value, token) => {
   return await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {
