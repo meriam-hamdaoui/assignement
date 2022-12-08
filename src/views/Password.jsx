@@ -21,6 +21,7 @@ const Password = () => {
   const handleShow = () => setShow(true);
 
   const [newPassword, setNewPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [showPwd, setShowPwd] = useState(false);
 
   const currentLocation = useLocation().pathname;
@@ -82,11 +83,11 @@ const Password = () => {
                   <input
                     autoComplete="no-fill"
                     type="text"
-                    name="password"
+                    name="email"
                     placeholder="Email"
                     required
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </Row>
               )}

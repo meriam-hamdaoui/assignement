@@ -10,13 +10,7 @@ const { createToken, isAuthenticated, isRegistered } = require("./helpers");
 const server = jsonServer.create();
 const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
-server.use(jsonServer.defaults());
-server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
-
-// thabet fiha svp
-server.use(function (req, res, next) {
+server.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
   res.header("Access-Control-Max-Age", "3600");
@@ -26,6 +20,13 @@ server.use(function (req, res, next) {
   );
   next();
 });
+
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json());
+server.use(jsonServer.defaults());
+server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+
+// thabet fiha svp
 
 // get all users
 server.get("/api/users", (req, res) => {
