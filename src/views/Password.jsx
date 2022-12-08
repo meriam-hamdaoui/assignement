@@ -32,10 +32,12 @@ const Password = () => {
 
   const handelSave = async () => {
     // if (currentLocation === "/login") {
-    //   console.log("newPassword", newPassword);
     //   const response = await passwordForgotenAPI(newPassword);
     //   console.log("response: " + response);
     // }
+    console.log("user.id", user.id);
+    console.log("newPassword", typeof newPassword);
+    console.log("token", token);
     await changePasswordAPI(user.id, newPassword, token);
   };
 

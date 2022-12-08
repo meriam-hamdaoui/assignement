@@ -121,11 +121,11 @@ const SignUp = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <label htmlFor="chkPwd" style={{ marginLeft: "6rem" }}>
+        <label htmlFor="chkPwdUP" style={{ marginLeft: "6rem" }}>
           <input
             type="checkbox"
             name="showPwd"
-            id="chkPwd"
+            id="chkPwdUP"
             value={true}
             defaultChecked={false}
             onClick={() => setShowPwd((showPwd) => (showPwd ? false : true))}

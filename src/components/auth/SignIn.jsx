@@ -66,11 +66,14 @@ const SignIn = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <label htmlFor="chkPwd" style={{ marginLeft: "6rem", color: "white" }}>
+        <label
+          htmlFor="chkPwdIn"
+          style={{ marginLeft: "6rem", color: "white" }}
+        >
           <input
             type="checkbox"
             name="showPwd"
-            id="chkPwd"
+            id="chkPwdIn"
             onClick={() => setShowPwd((showPwd) => (showPwd ? false : true))}
           />
           &nbsp;Show Password

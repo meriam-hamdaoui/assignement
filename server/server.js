@@ -182,19 +182,13 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
     }
 
     data = JSON.parse(data);
-    console.log("JSON.parse(data) line 185", data);
-
-    console.log("data.users line 187", data.users);
 
     if (token) {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));
-      console.log("index line 191", index);
 
-      console.log("data.users[index] line 193", data.users[index]);
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
       data.users[index] = { ...data.users[index], password: hash };
-      console.log("data.users[2] line 193", data.users[index]);
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) {
@@ -282,5 +276,5 @@ server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
 });
 
 server.listen(5000, () => {
-  console.log("Running fake api json server");
+  console.log("go to http://localhost:5000 or  http://192.168.10.221:5000");
 });
