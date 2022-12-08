@@ -71,7 +71,7 @@ const Password = () => {
         <Modal.Header closeButton>
           <Modal.Title>
             {currentLocation === "/login"
-              ? "Change Password"
+              ? "Forget Password"
               : "Update Password"}
           </Modal.Title>
         </Modal.Header>
@@ -97,7 +97,7 @@ const Password = () => {
                   autoComplete="no-fill"
                   type={showPwd ? "text" : "password"}
                   name="password"
-                  placeholder="Password"
+                  placeholder="New Password"
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
