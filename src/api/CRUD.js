@@ -55,31 +55,21 @@ export const updateProfileAPI = async (id, value, token) => {
 
 // modify password
 export const changePasswordAPI = async (id, value, token) => {
-  const response = await axios.put(
-    `${REACT_APP_URL}/api/users/password/${id}`,
-    value,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    }
-  );
-  return response;
+  await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
 };
 
 // forget password
-export const passwordForgoten = async (value) => {
-  const response = await axios.put(
-    `${REACT_APP_URL}/api/users/forget_password`,
-    value,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return response;
+export const passwordForgotenAPI = async (value) => {
+  await axios.put(`${REACT_APP_URL}/api/users/forget_password`, value, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
 
 // delete profile

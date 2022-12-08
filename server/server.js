@@ -186,20 +186,21 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
     if (token) {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));
 
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(password, salt);
+      if (index > -1) {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
+        data.users[index] = { ...data.users[index], password: hash };
 
-      data.users[index] = { ...data.users[index], password: hash };
-
-      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-        if (error) {
-          return res.status(401).json({ message: error });
-        }
-        return res.status(200).json({
-          message: "password updated with success",
-          newPwd: data.users[index],
+        fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+          if (error) {
+            return res.status(401).json({ message: error });
+          }
+          return res.status(200).json({
+            message: "password updated with success",
+            newPwd: data.users[index],
+          });
         });
-      });
+      }
     } else {
       return res.status(401).json({ message: "unauthorized" });
     }
