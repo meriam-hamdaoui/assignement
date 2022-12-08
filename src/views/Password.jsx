@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { CgPassword } from "react-icons/cg";
-import { changePasswordAPI, passwordForgoten } from "../api/CRUD";
+import { changePasswordAPI, passwordForgotenAPI } from "../api/CRUD";
 import { isAuth } from "components/helpers/authantication";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteStorage } from "../components/helpers/authantication";
@@ -31,21 +31,12 @@ const Password = () => {
   const navigate = useNavigate();
 
   const handelSave = async () => {
-    if (currentLocation !== "/login" && token) {
-      await changePasswordAPI(user.id, newPassword, token);
-
-      // .then((response) => {
-      //   // alert(response.data.message);
-      //   // deleteStorage("user", "token");
-      //   // navigate("/login", { replace: true });
-      // });
-      // .catch((error) => console.error(error.response.data.message));
-    }
-    if (currentLocation === "/login") {
-      await passwordForgoten(newPassword).then((response) => {
-        alert(response.data.message);
-      });
-    }
+    // if (currentLocation === "/login") {
+    //   console.log("newPassword", newPassword);
+    //   const response = await passwordForgotenAPI(newPassword);
+    //   console.log("response: " + response);
+    // }
+    await changePasswordAPI(user.id, newPassword, token);
   };
 
   return (
