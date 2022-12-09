@@ -166,7 +166,7 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
       return res.status(status).json({ status, message });
     }
 
-    data = JSON.parse(data);
+    data = JSON.parse(data.toString());
 
     if (token) {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));

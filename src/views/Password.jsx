@@ -34,7 +34,6 @@ const Password = () => {
         password: password,
       });
     } else {
-      console.log("password !/login: " + password);
       await changePasswordAPI(user.id, password, token);
     }
   };
