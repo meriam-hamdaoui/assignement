@@ -30,12 +30,9 @@ server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 // get all users
 server.get("/api/users", (req, res) => {
-  fs.readFile("./db.json", (err, data) => {
-    if (err) {
-      const status = 401;
-      const message = err;
-      return res.status(status).json({ status, message });
-    }
+  fs.readFile("./db.json", (error, data) => {
+    if (error) return res.status(error.status).json(error.message);
+
     data = JSON.parse(data.toString());
 
     return res.status(200).json(data.users);
@@ -51,12 +48,8 @@ server.post("/api/auth/register", (req, res) => {
     return res.status(status).json({ status, message });
   }
 
-  fs.readFile("./db.json", (err, data) => {
-    if (err) {
-      const status = 401;
-      const message = err;
-      return res.status(status).json({ status, message });
-    }
+  fs.readFile("./db.json", (error, data) => {
+    if (error) return res.status(error.status).json(error.message);
 
     data = JSON.parse(data.toString());
 
@@ -72,16 +65,12 @@ server.post("/api/auth/register", (req, res) => {
     newUser = { ...newUser, id: last_item_id + 1, password: newUser.password };
 
     data.users.push(newUser);
-    fs.writeFile("./db.json", JSON.stringify(data), (err, result) => {
-      if (err) {
-        const status = 401;
-        const message = err;
-        return res.status(status).json({ status, message });
-      }
+    fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+      if (error) return res.status(error.status).json(error.message);
+      return res
+        .status(200)
+        .json({ message: "user registred with success", newUser: newUser });
     });
-    return res
-      .status(200)
-      .json({ message: "user registred with success", newUser: newUser });
   });
 });
 
@@ -114,19 +103,15 @@ server.post("/api/auth/login", async (req, res) => {
 server.get("/api/users/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
-  // const user = req.user;
 
-  fs.readFile("./db.json", (err, data) => {
-    if (err) {
-      const status = 401;
-      const message = err;
-      return res.status(status).json({ status, message });
-    }
+  fs.readFile("./db.json", (error, data) => {
+    if (error) return res.status(error.status).json(error.message);
+
+    console.log("\n");
     data = JSON.parse(data.toString());
 
     if (token) {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));
-
       return res.status(200).json({ user: data.users[index] });
     } else {
       return res.status(401).json({ message: "unAuthorized" });
@@ -140,13 +125,10 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   const token = req.header("Authorization");
 
   fs.readFile("./db.json", (error, data) => {
-    if (error) {
-      const status = 401;
-      const message = error;
-      return res.status(status).json({ status, message });
-    }
+    if (error) return res.status(error.status).json(error.message);
 
     data = JSON.parse(data.toString());
+    console.log("data 142", data);
 
     if (token) {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));
@@ -154,9 +136,8 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
       data.users[index] = { ...req.user, ...req.body };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-        if (error) {
-          return res.status(401).json({ message: error });
-        }
+        if (error) return res.status(401).json({ message: error });
+
         return res.status(200).json({
           message: "user updated with success",
           editedUser: data.users[index],
@@ -173,6 +154,8 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
   const { password } = req.body;
+
+  console.log("password line178: " + password);
 
   fs.readFile("./db.json", (error, data) => {
     if (error) {
@@ -209,36 +192,40 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
 server.put("/api/users/forget_password", (req, res) => {
   const { email, password } = req.body;
 
-  fs.readFile("./db.json", (error, data) => {
-    if (error) {
-      const status = 401;
-      const message = error;
-      return res.status(status).json({ status, message });
-    }
+  console.log("req.body pasword line 206", password);
 
-    data = JSON.parse(data.toString());
+  try {
+    fs.readFile("./db.json", (error, data) => {
+      if (error) return res.status(error.status).json(error.message);
 
-    const userIndex = data.users.findIndex((el) => el.email === email);
+      data = JSON.parse(data.toString());
 
-    if (userIndex > -1) {
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(password, salt);
+      const index = data.users.findIndex((el) => el.email === email);
 
-      data.users[userIndex] = { ...data.users[userIndex], password: hash };
+      if (index > -1) {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
 
-      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-        if (error) {
-          return res.status(401).json({ message: error });
-        }
-        return res.status(200).json({
-          message: "password changed with success",
-          newPwd: data.users[userIndex],
+        data.users[index] = { ...data.users[index], password: hash };
+
+        fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+          if (error) return res.status(error.status).json(error.message);
+
+          return res.status(200).json({
+            message: "password changed with success",
+            newPwd: data.users[index],
+          });
         });
-      });
-    } else {
-      return res.status(401).json({ message: "unauthorized" });
-    }
-  });
+      } else {
+        return res
+          .status(404)
+          .json({ message: "no user with is email address" });
+      }
+    });
+  } catch (error) {
+    console.log("catch error : ", error.message);
+    return res.status(error.status).json(error.message);
+  }
 });
 
 // delete account
@@ -248,11 +235,7 @@ server.delete("/api/auth/delete/:id", isAuthenticated, (req, res) => {
   const user = req.user;
 
   fs.readFile("./db.json", (error, data) => {
-    if (error) {
-      const status = 401;
-      const message = error;
-      return res.status(status).json({ status, message });
-    }
+    if (error) return res.status(error.status).json(error.message);
 
     data = JSON.parse(data.toString());
 
