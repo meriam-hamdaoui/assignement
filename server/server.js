@@ -155,7 +155,7 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
   const token = req.header("Authorization");
   const { password } = req.body;
 
-  console.log("password line178: " + password);
+  console.log("password server line 158: " + password);
 
   fs.readFile("./db.json", (error, data) => {
     if (error) {
@@ -192,8 +192,6 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
 server.put("/api/users/forget_password", (req, res) => {
   const { email, password } = req.body;
 
-  console.log("req.body pasword line 206", password);
-
   try {
     fs.readFile("./db.json", (error, data) => {
       if (error) return res.status(error.status).json(error.message);
@@ -204,7 +202,7 @@ server.put("/api/users/forget_password", (req, res) => {
 
       if (index > -1) {
         const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(password, salt);
+        const hash = bcrypt.hashSync(JSON.stringify(password), salt);
 
         data.users[index] = { ...data.users[index], password: hash };
 

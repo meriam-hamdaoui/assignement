@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { Modal, Button, Form, Row } from "react-bootstrap";
 import { CgPassword } from "react-icons/cg";
 import { changePasswordAPI, passwordForgotenAPI } from "../api/CRUD";
 import { isAuth } from "components/helpers/authantication";
-import { useLocation, useNavigate } from "react-router-dom";
-import { deleteStorage } from "../components/helpers/authantication";
+import { useLocation } from "react-router-dom";
 
 const styleUpdate = { background: "none", border: "none" };
 
@@ -20,7 +19,7 @@ const Password = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [newPassword, setNewPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPwd, setShowPwd] = useState(false);
 
@@ -28,17 +27,16 @@ const Password = () => {
 
   const { user, token } = isAuth("user", "token");
 
-  const navigate = useNavigate();
-
   const handelSave = async () => {
-    // if (currentLocation === "/login") {
-    //   const response = await passwordForgotenAPI(newPassword);
-    //   console.log("response: " + response);
-    // }
-    console.log("user.id", user.id);
-    console.log("newPassword", typeof newPassword);
-    console.log("token", token);
-    await changePasswordAPI(user.id, newPassword, token);
+    if (currentLocation === "/login") {
+      await passwordForgotenAPI({
+        email: email,
+        password: password,
+      });
+    } else {
+      console.log("password !/login: " + password);
+      await changePasswordAPI(user.id, password, token);
+    }
   };
 
   return (
@@ -92,8 +90,8 @@ const Password = () => {
                   name="password"
                   placeholder="New Password"
                   required
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <label htmlFor="chkPwd" style={{ marginLeft: "6rem" }}>
