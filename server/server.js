@@ -77,6 +77,9 @@ server.post("/api/auth/register", (req, res) => {
 // signin
 server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log("server email line 80: " + email);
+  console.log("\n");
+
   const user = userdb.users.find((user) => user.email === email);
 
   if (!isRegistered({ email })) {
@@ -84,17 +87,16 @@ server.post("/api/auth/login", async (req, res) => {
     const message = "user is not registred";
     return res.status(status).json({ message: message });
   } else {
-    bcrypt.compare(password, user.password).then((matched) => {
-      if (!matched) {
-        return res.status(401).json({ message: "Invalid Password" });
-      }
+    const matched = bcrypt.compareSync(JSON.stringify(password), user.password);
+    if (!matched) {
+      return res.status(401).json({ message: "Invalid Password" });
+    }
 
-      const access_token = createToken({ id: user.id });
-      return res.status(200).json({
-        message: `welcome ${user.firstName} ${user.lastName}`,
-        user: user,
-        token: access_token,
-      });
+    const access_token = createToken({ id: user.id });
+    return res.status(200).json({
+      message: `welcome ${user.firstName} ${user.lastName}`,
+      user: user,
+      token: access_token,
     });
   }
 });
@@ -170,7 +172,7 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));
 
       const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(password, salt);
+      const hash = bcrypt.hashSync(JSON.stringify(password), salt);
       data.users[index] = { ...data.users[index], password: hash };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
