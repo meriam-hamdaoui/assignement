@@ -77,8 +77,6 @@ server.post("/api/auth/register", (req, res) => {
 // signin
 server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log("server email line 80: " + email);
-  console.log("\n");
 
   const user = userdb.users.find((user) => user.email === email);
 
@@ -87,7 +85,7 @@ server.post("/api/auth/login", async (req, res) => {
     const message = "user is not registred";
     return res.status(status).json({ message: message });
   } else {
-    const matched = bcrypt.compareSync(JSON.stringify(password), user.password);
+    const matched = bcrypt.compare(JSON.stringify(password), user.password);
     if (!matched) {
       return res.status(401).json({ message: "Invalid Password" });
     }
