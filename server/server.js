@@ -123,25 +123,32 @@ server.get("/api/users/:id", isAuthenticated, (req, res) => {
 server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
+  try {
+    if (token) {
+      fs.readFile("./db.json", (error, data) => {
+        if (error) return res.status(error.status).json(error.message);
 
-  if (token) {
-    fs.readFile("./db.json", (error, data) => {
-      if (error) return res.status(error.status).json(error.message);
+        data = JSON.parse(data.toString());
 
-      data = JSON.parse(data.toString());
+        const index = data.users.findIndex(
+          (el) => Number(el.id) === Number(id)
+        );
 
-      const index = data.users.findIndex((el) => Number(el.id) === Number(id));
+        data.users[index] = { ...data.users[index], ...req.body };
 
-      data.users[index] = { ...data.users[index], ...req.body };
+        fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+          if (error) {
+            return res.status(error.status).json(error.message);
+          }
 
-      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-        if (error) {
-          return res.status(error.status).json(error.message);
-        }
-
-        return res.json({ user: data.users[index] });
+          return res.json({ user: data.users[index] });
+        });
       });
-    });
+    } else {
+      return res.status(401).json("unauthorized");
+    }
+  } catch (error) {
+    return res.status(error.status).json(error.message);
   }
 });
 
@@ -151,37 +158,42 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
   const token = req.header("Authorization");
   const { password } = req.body;
 
-  console.log("password server line 158: " + password);
-
-  fs.readFile("./db.json", (error, data) => {
-    if (error) {
-      const status = 401;
-      const message = error;
-      return res.status(status).json({ status, message });
-    }
-
-    data = JSON.parse(data.toString());
-
+  try {
     if (token) {
-      const index = data.users.findIndex((el) => Number(el.id) === Number(id));
-
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(JSON.stringify(password), salt);
-      data.users[index] = { ...data.users[index], password: hash };
-
-      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+      fs.readFile("./db.json", (error, data) => {
         if (error) {
-          return res.status(401).json({ message: error });
+          const status = 401;
+          const message = error;
+          return res.status(status).json(message);
         }
-        return res.status(200).json({
-          message: "password updated with success",
-          newPwd: data.users[index],
+
+        data = JSON.parse(data.toString());
+
+        const index = data.users.findIndex(
+          (el) => Number(el.id) === Number(id)
+        );
+
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
+
+        req.user.password = hash;
+
+        data.users[index] = { ...req.user };
+
+        fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+          if (error) {
+            return res.status(error.status).json(error.message);
+          }
+
+          return res.status(200).json(data.users[index]);
         });
       });
     } else {
-      return res.status(401).json({ message: "unauthorized" });
+      return res.status(401).json("unauthorized");
     }
-  });
+  } catch (error) {
+    return res.status(error.status).json(error.message);
+  }
 });
 
 // password forgoten

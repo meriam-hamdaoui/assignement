@@ -46,12 +46,12 @@
       "id": 5
     },
     {
-      "firstName": "user62",
-      "lastName": "user66",
-      "phone": "78912345",
+      "firstName": "user6",
+      "lastName": "user6",
+      "phone": "678912345",
       "country": "Maroco",
       "email": "user6@example.com",
-      "password": "$2a$10$TrEoC6GCo2uQUIgGRPhqtOsm6kYiRlMgrhgIl3JOs.lM/aK7QPAXG",
+      "password": "$2a$10$lInlllmdpbpF6IipEwYW5e4tor4XSYtzBWK1IXoOhoswNp9cfY1X2",
       "id": 6
     }
   ]
