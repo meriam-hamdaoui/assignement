@@ -19,27 +19,32 @@ exports.isAuthenticated = async (req, res, next) => {
   try {
     const token = req.header("Authorization");
 
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "you are not authorized to perceed" });
-    } else {
-      return jwt.verify(token, SECRET_KEY, async (error, decoder) => {
-        if (error)
-          return res.status(401).json({ message: "failed to authenticate" });
+    if (token)
+      jwt.verify(token, SECRET_KEY, async (error, decoder) => {
+        if (error) {
+          return res.status(401).send({ message: "failed to authenticate" });
+        }
+        if (!decoder) {
+          return res.json({ message: "user doesn't exist" });
+        }
 
-        if (!decoder)
-          return res
-            .status(404)
-            .json({ message: "no such user, sign up first" });
+        fs.readFile("./db.json", (error, data) => {
+          if (error) {
+            const status = 401;
+            const message = error;
+            return res.status(status).json({ status, message });
+          }
 
-        const user = userdb.users.find((el) => el.id === decoder.id);
+          data = JSON.parse(data.toString());
 
-        req.user = { ...user };
+          const index = data.users.findIndex((el) => el.id === decoder.id);
 
-        return next();
+          const user = JSON.stringify(data.users[index]);
+
+          req.user = user;
+          next();
+        });
       });
-    }
   } catch (error) {
     console.error("authentication error =>", error);
     return res.status(500).json({ message: "authentication error" });
