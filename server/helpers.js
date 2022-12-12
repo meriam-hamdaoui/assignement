@@ -19,32 +19,22 @@ exports.isAuthenticated = async (req, res, next) => {
   try {
     const token = req.header("Authorization");
 
-    if (token)
-      jwt.verify(token, SECRET_KEY, async (error, decoder) => {
-        if (error) {
-          return res.status(401).send({ message: "failed to authenticate" });
-        }
-        if (!decoder) {
-          return res.json({ message: "user doesn't exist" });
-        }
+    if (token) {
+      let decoder = jwt.verify(token, SECRET_KEY);
 
-        fs.readFile("./db.json", (error, data) => {
-          if (error) {
-            const status = 401;
-            const message = error;
-            return res.status(status).json({ status, message });
-          }
+      if (!decoder) {
+        return res.status(404).json("user doesn't exist");
+      }
 
-          data = JSON.parse(data.toString());
+      const user = await userdb.users.find((el) => el.id === decoder.id);
 
-          const index = data.users.findIndex((el) => el.id === decoder.id);
+      req.user = user;
 
-          const user = JSON.stringify(data.users[index]);
-
-          req.user = user;
-          next();
-        });
-      });
+      next();
+    }
+    if (!token) {
+      return res.status(404).json({ message: "failed to authenticate" });
+    }
   } catch (error) {
     console.error("authentication error =>", error);
     return res.status(500).json({ message: "authentication error" });

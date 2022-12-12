@@ -46,22 +46,13 @@
       "id": 5
     },
     {
-      "firstName": "user6",
-      "lastName": "user6",
-      "phone": "67891234",
-      "country": "Maroco",
-      "email": "user6@example.com",
-      "password": "$2a$10$HY3mwgo4T/9r2.f7qBUZy.37cODkr81VmwTnbD.g//Lj.Rkn0tezK",
-      "id": 6
-    },
-    {
-      "firstName": "user7",
-      "lastName": "user7",
+      "firstName": "user62",
+      "lastName": "user66",
       "phone": "78912345",
       "country": "Maroco",
-      "email": "user7@example.com",
-      "password": "$2a$10$7Z9c4M2mpSW3VM/CUta07eKsCH3gvmdInwtYHmIk3IzfnWxv4I1ku",
-      "id": 7
+      "email": "user6@example.com",
+      "password": "$2a$10$TrEoC6GCo2uQUIgGRPhqtOsm6kYiRlMgrhgIl3JOs.lM/aK7QPAXG",
+      "id": 6
     }
   ]
 }

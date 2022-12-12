@@ -124,29 +124,25 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
 
-  fs.readFile("./db.json", (error, data) => {
-    if (error) return res.status(error.status).json(error.message);
+  if (token) {
+    fs.readFile("./db.json", (error, data) => {
+      if (error) return res.status(error.status).json(error.message);
 
-    data = JSON.parse(data.toString());
-    console.log("data 142", data);
+      data = JSON.parse(data.toString());
 
-    if (token) {
       const index = data.users.findIndex((el) => Number(el.id) === Number(id));
 
-      data.users[index] = { ...req.user, ...req.body };
+      data.users[index] = { ...data.users[index], ...req.body };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-        if (error) return res.status(401).json({ message: error });
+        if (error) {
+          return res.status(error.status).json(error.message);
+        }
 
-        return res.status(200).json({
-          message: "user updated with success",
-          editedUser: data.users[index],
-        });
+        return res.json({ user: data.users[index] });
       });
-    } else {
-      return res.status(401).json({ message: "unauthorized" });
-    }
-  });
+    });
+  }
 });
 
 // modify password
