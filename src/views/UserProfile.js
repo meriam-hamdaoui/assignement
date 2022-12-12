@@ -14,6 +14,7 @@ import {
 import { updateProfileAPI, getUserAPI } from "../api/CRUD";
 import { setUser } from "JS/userReducer";
 import Password from "./Password";
+import { countries } from "components/helpers/constants";
 
 const renderTooltip = (props) => (
   <Tooltip id="button-tooltip" {...props}>
@@ -127,7 +128,26 @@ const User = () => {
                   </Row>
                   <Row>
                     <Col md="4">
-                      <Form.Group>
+                      <select
+                        style={{
+                          background: "rgb(236, 230, 230)",
+                          width: "60%",
+                          margin: "20px auto",
+                        }}
+                        id="country"
+                        name="country"
+                        value={newCountry}
+                        className="form-control"
+                        onChange={(e) => setNewCountry(e.target.value)}
+                      >
+                        <option key={1}>Select Country</option>
+                        {countries.map((country) => (
+                          <option key={country.id} value={country.value}>
+                            {country.label}
+                          </option>
+                        ))}
+                      </select>
+                      {/* <Form.Group>
                         <label>Country</label>
                         <Form.Control
                           placeholder="Country"
@@ -135,7 +155,7 @@ const User = () => {
                           defaultValue={country}
                           onChange={(e) => setNewCountry(e.target.value)}
                         />
-                      </Form.Group>
+                      </Form.Group> */}
                     </Col>
                     <Col md="8">
                       <Form.Group>
