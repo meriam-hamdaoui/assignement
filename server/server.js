@@ -155,40 +155,34 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
 // modify password
 server.put("/api/users/password/:id", isAuthenticated, async (req, res) => {
   const { id } = req.params;
-  const token = req.header("Authorization");
-  const { password } = await req.body;
+  const { password } = req.body;
+
   try {
-    if (token) {
-      fs.readFile("./db.json", (error, data) => {
+    fs.readFile("./db.json", (error, data) => {
+      if (error) {
+        const status = 401;
+        const message = error;
+        return res.status(status).json(message);
+      }
+
+      data = JSON.parse(data.toString());
+
+      const index = data.users.findIndex((el) => Number(el.id) === Number(id));
+
+      const hash = bcrypt.hashSync(password, salt);
+
+      req.user.password = hash;
+
+      data.users[index] = { ...req.user };
+
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) {
-          const status = 401;
-          const message = error;
-          return res.status(status).json(message);
+          return res.status(error.status).json(error.message);
         }
 
-        data = JSON.parse(data.toString());
-
-        const index = data.users.findIndex(
-          (el) => Number(el.id) === Number(id)
-        );
-
-        const hash = bcrypt.hashSync(password, salt);
-
-        req.user.password = hash;
-
-        data.users[index] = { ...req.user };
-
-        fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-          if (error) {
-            return res.status(error.status).json(error.message);
-          }
-
-          return res.status(200).json(data.users[index]);
-        });
+        return res.status(200).json(data.users[index]);
       });
-    } else {
-      return res.status(401).json("unauthorized");
-    }
+    });
   } catch (error) {
     console.log(error.response.data);
     return res.status(error.status).json(error.message);

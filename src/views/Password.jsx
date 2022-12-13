@@ -34,7 +34,7 @@ const Password = () => {
         password: password,
       });
     } else {
-      await changePasswordAPI(user.id, password, token);
+      await changePasswordAPI(user.id, { password: password }, token);
     }
   };
 

@@ -57,7 +57,7 @@ export const updateProfileAPI = async (id, value, token) => {
 export const changePasswordAPI = async (id, value, token) => {
   await axios.put(`${REACT_APP_URL}/api/users/password/${id}`, value, {
     headers: {
-      "Content-Type": "application/json text/plain",
+      "Content-Type": "application/json",
       Authorization: token,
     },
   });
