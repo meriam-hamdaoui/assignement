@@ -78,25 +78,26 @@ server.post("/api/auth/register", (req, res) => {
 server.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = userdb.users.find((user) => user.email === email);
-
   if (!isRegistered({ email })) {
     const status = 404;
     const message = "user is not registred";
     return res.status(status).json({ message: message });
-  } else {
-    const matched = bcrypt.compare(JSON.stringify(password), user.password);
-    if (!matched) {
-      return res.status(401).json({ message: "Invalid Password" });
-    }
-
-    const access_token = createToken({ id: user.id });
-    return res.status(200).json({
-      message: `welcome ${user.firstName} ${user.lastName}`,
-      user: user,
-      token: access_token,
-    });
   }
+
+  const user = userdb.users.find((user) => user.email === email);
+
+  const matched = bcrypt.compareSync(password, user.password);
+
+  if (!matched) {
+    return res.status(401).json({ message: "Invalid password" });
+  }
+
+  const access_token = createToken({ id: user.id });
+  return res.status(200).json({
+    message: `welcome ${user.firstName} ${user.lastName}`,
+    user: user,
+    token: access_token,
+  });
 });
 
 // display profile

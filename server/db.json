@@ -53,6 +53,15 @@
       "email": "user6@example.com",
       "password": "$2a$10$lInlllmdpbpF6IipEwYW5e4tor4XSYtzBWK1IXoOhoswNp9cfY1X2",
       "id": 6
+    },
+    {
+      "firstName": "user7",
+      "lastName": "user7",
+      "phone": "78912345",
+      "country": "Maroco",
+      "email": "user7@example.com",
+      "password": "$2a$10$9ar8XR7sH0sCPKVn9aEDh.RCG7St7pzGTt4ZUuVcJD2R4Sta0WUQa",
+      "id": 7
     }
   ]
 }
