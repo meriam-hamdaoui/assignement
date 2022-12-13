@@ -20,9 +20,6 @@ const userSlice = createSlice({
     login: (state, action) => {
       return action.payload;
     },
-    logout: (state, action) => {
-      return action.payload;
-    },
     register: (state, action) => {
       const newUser = {
         id: uuidv4(),
@@ -36,5 +33,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { login, logout, register, setUser } = userSlice.actions;
+export const { login, register, setUser } = userSlice.actions;
 export default userSlice.reducer;

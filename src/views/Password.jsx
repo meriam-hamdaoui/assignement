@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Row } from "react-bootstrap";
 import { CgPassword } from "react-icons/cg";
 import { changePasswordAPI, passwordForgotenAPI } from "../api/CRUD";
-import { isAuth } from "components/helpers/authantication";
-import { useLocation } from "react-router-dom";
+import { isAuth, logout } from "components/helpers/authantication";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const styleUpdate = { background: "none", border: "none" };
 
@@ -27,14 +27,18 @@ const Password = () => {
 
   const { user, token } = isAuth("user", "token");
 
+  const navigate = useNavigate();
+
   const handelSave = async () => {
     if (currentLocation === "/login") {
       await passwordForgotenAPI({
         email: email,
         password: password,
       });
+      handleClose();
     } else {
       await changePasswordAPI(user.id, { password: password }, token);
+      logout(() => navigate("/login", { replace: true }));
     }
   };
 

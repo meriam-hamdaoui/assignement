@@ -13,3 +13,8 @@ export const deleteStorage = (key1, key2) => {
   localStorage.removeItem(key1);
   localStorage.removeItem(key2);
 };
+
+export const logout = (next) => {
+  deleteStorage("user", "token");
+  next();
+};

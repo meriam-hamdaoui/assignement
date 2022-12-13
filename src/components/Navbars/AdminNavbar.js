@@ -15,13 +15,11 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import routes from "routes.js";
-import { logout } from "../../JS/userReducer";
-import { useDispatch } from "react-redux";
-import { deleteStorage } from "../helpers/authantication";
+import { logout } from "../helpers/authantication";
 
 function Header() {
   const location = useLocation();
@@ -47,12 +45,9 @@ function Header() {
   };
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    deleteStorage("user", "token");
-    dispatch(logout());
-    navigate("/", { replace: true });
+    logout(() => navigate("/", { replace: true }));
   };
 
   return (
