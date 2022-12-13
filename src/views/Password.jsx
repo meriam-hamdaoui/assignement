@@ -34,11 +34,7 @@ const Password = () => {
         password: password,
       });
     } else {
-      await changePasswordAPI({
-        id: user.id,
-        password: password,
-        token: token,
-      });
+      await changePasswordAPI(user.id, password, token);
     }
   };
 
@@ -90,7 +86,7 @@ const Password = () => {
                 <input
                   autoComplete="no-fill"
                   type={showPwd ? "text" : "password"}
-                  name="password"
+                  name="update_password"
                   placeholder="New Password"
                   required
                   value={password}

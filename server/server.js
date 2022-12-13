@@ -21,8 +21,8 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
 server.use(jsonServer.defaults());
 server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
@@ -153,11 +153,10 @@ server.put("/api/users/update/:id", isAuthenticated, (req, res) => {
 });
 
 // modify password
-server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
+server.put("/api/users/password/:id", isAuthenticated, async (req, res) => {
   const { id } = req.params;
   const token = req.header("Authorization");
-  const { password } = req.body;
-
+  const { password } = await req.body;
   try {
     if (token) {
       fs.readFile("./db.json", (error, data) => {
@@ -191,6 +190,7 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
       return res.status(401).json("unauthorized");
     }
   } catch (error) {
+    console.log(error.response.data);
     return res.status(error.status).json(error.message);
   }
 });
