@@ -26,7 +26,7 @@ server.use(bodyParser.json());
 server.use(jsonServer.defaults());
 server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
-// thabet fiha svp
+const salt = bcrypt.genSaltSync(10);
 
 // get all users
 server.get("/api/users", (req, res) => {
@@ -57,7 +57,6 @@ server.post("/api/auth/register", (req, res) => {
 
     let newUser = { ...req.body };
 
-    const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(newUser.password, salt);
 
     newUser.password = hash;
@@ -174,7 +173,6 @@ server.put("/api/users/password/:id", isAuthenticated, (req, res) => {
           (el) => Number(el.id) === Number(id)
         );
 
-        const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
         req.user.password = hash;
@@ -202,32 +200,31 @@ server.put("/api/users/forget_password", (req, res) => {
   const { email, password } = req.body;
 
   try {
-    fs.readFile("./db.json", (error, data) => {
-      if (error) return res.status(error.status).json(error.message);
+    if (!isRegistered({ email })) {
+      const status = 404;
+      const message = "user is not registred";
+      return res.status(status).json({ message: message });
+    }
 
+    fs.readFile("./db.json", (error, data) => {
+      if (error) {
+        return res.status(error.status).json({ message: error.message });
+      }
       data = JSON.parse(data.toString());
 
       const index = data.users.findIndex((el) => el.email === email);
 
-      if (index > -1) {
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(JSON.stringify(password), salt);
-
-        data.users[index] = { ...data.users[index], password: hash };
-
-        fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
-          if (error) return res.status(error.status).json(error.message);
-
-          return res.status(200).json({
-            message: "password changed with success",
-            newPwd: data.users[index],
-          });
+      const hash = bcrypt.hashSync(password, salt);
+      data.users[index].password = hash;
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) {
+          return res.status(error.status).json(error.message);
+        }
+        return res.status(200).json({
+          message: "password changed with success",
+          user: data.users[index],
         });
-      } else {
-        return res
-          .status(404)
-          .json({ message: "no user with is email address" });
-      }
+      });
     });
   } catch (error) {
     console.log("catch error : ", error.message);
