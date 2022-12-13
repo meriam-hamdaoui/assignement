@@ -74,5 +74,5 @@ export const passwordForgotenAPI = async (value) => {
 
 // delete profile
 export const deleteProfileAPI = async (id) => {
-  await axios.delete(`${REACT_APP_URL}/users/${id}`);
+  await axios.delete(`${REACT_APP_URL}/api/auth/delete/${id}`);
 };
