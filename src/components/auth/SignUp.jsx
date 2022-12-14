@@ -36,7 +36,7 @@ const SignUp = () => {
         .then((result) => {
           if (result) {
             const { message, newUser } = result.data;
-            alert(message);
+            alert("please check your email to confirm registration");
             dispatch(register({ ...newUser }));
             window.location.reload(true);
           }

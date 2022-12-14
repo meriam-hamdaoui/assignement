@@ -35,9 +35,11 @@ const Password = () => {
         email: email,
         password: password,
       });
+      alert("please check your email to confirm the password reset");
       handleClose();
     } else {
       await changePasswordAPI(user.id, { password: password }, token);
+      alert("logout and check your email for confirmation");
       logout(() => navigate("/login", { replace: true }));
     }
   };
