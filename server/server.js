@@ -68,6 +68,8 @@ server.put("/api/users/forget_password", resetPassword);
 // delete account
 server.delete("/api/auth/delete/:id", isAuthenticated, deleteAccount);
 
-server.listen(5000, () => {
-  console.log("go to http://localhost:5000 or  http://192.168.10.221:5000");
+const PORT = 5000 || 5005;
+
+server.listen(PORT, () => {
+  console.log(`go to http://localhost:${PORT}`);
 });
