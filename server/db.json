@@ -55,13 +55,13 @@
       "id": 6
     },
     {
-      "firstName": "user7",
-      "lastName": "user7",
-      "country": "Macao",
-      "phone": "78912345",
-      "email": "user7@example.com",
-      "password": "$2a$10$MjzXN1zdJXCcFR11BiNeFea.MzmM2GLeKOVf8S2eHj9zHEY9SR2Cm",
-      "id": 7
+      "firstName": "user81",
+      "lastName": "user82",
+      "country": "United States",
+      "phone": "89123456",
+      "email": "user8@example.com",
+      "password": "$2a$10$f8dg0l.lleqPQmgqu7346ecOItSF5QN1CC6zApryEBGm3V9tiu4zi",
+      "id": 8
     }
   ]
 }
