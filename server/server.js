@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const jsonServer = require("json-server");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
+const multer = require("multer");
 
 // third partie
 const { isAuthenticated } = require("./helpers");
@@ -14,6 +15,8 @@ const {
   changePassword,
   resetPassword,
   deleteAccount,
+  uploadIconNbr,
+  uploadIconFlw,
 } = require("./controllers");
 
 const server = jsonServer.create();
@@ -36,6 +39,38 @@ server.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 const salt = bcrypt.genSaltSync(10);
 
+//multer for upload
+const storage = (folderName) =>
+  multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, `public/${folderName}`);
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname + "-" + Date.now());
+    },
+  });
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = (folderName) =>
+  multer({
+    storage: storage(folderName),
+    limits: {
+      fileSize: 1024 * 1024 * 5,
+    },
+    fileFilter: fileFilter,
+  });
+
 // get all users
 server.get("/api/users", (req, res) => {
   fs.readFile("./db.json", (error, data) => {
@@ -46,6 +81,19 @@ server.get("/api/users", (req, res) => {
     return res.status(200).json(data.users);
   });
 });
+
+server.put(
+  "/api/icons/numbers",
+  isAuthenticated,
+  upload("uploads").single("numbers"),
+  uploadIconNbr
+);
+server.put(
+  "/api/icons/followers",
+  isAuthenticated,
+  upload("uploads").single("followers"),
+  uploadIconFlw
+);
 
 // create account
 server.post("/api/auth/register", register);

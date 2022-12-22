@@ -7,6 +7,71 @@ const salt = bcrypt.genSaltSync(10);
 
 const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 
+exports.uploadIconNbr = (req, res) => {
+  try {
+    const icon = req.file.filename;
+
+    fs.readFile("./db.json", (error, data) => {
+      if (error) return res.status(error.status).json(error.message);
+
+      data = JSON.parse(data.toString());
+
+      let last_item_id = 0;
+
+      if (data.numbers.length === 0) {
+        last_item_id = 1;
+      } else {
+        last_item_id = data.numbers[data.numbers.length - 1].id + 1;
+      }
+
+      const newIconNbr = { id: last_item_id, icon: icon };
+
+      data.numbers.push(newIconNbr);
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) return res.status(error.status).json(error.message);
+        return res.status(200).json({
+          message: "icon uploaded",
+          icon: newIconNbr,
+        });
+      });
+    });
+  } catch (error) {
+    return res.status(error.status).json(error.message);
+  }
+};
+exports.uploadIconFlw = (req, res) => {
+  try {
+    const icon = req.file.filename;
+
+    fs.readFile("./db.json", (error, data) => {
+      if (error) return res.status(error.status).json(error.message);
+
+      data = JSON.parse(data.toString());
+
+      let last_item_id = 0;
+
+      if (data.followers.length === 0) {
+        last_item_id = 1;
+      } else {
+        last_item_id = data.followers[data.followers.length - 1].id + 1;
+      }
+
+      const newIconNbr = { id: last_item_id, icon: icon };
+
+      data.followers.push(newIconNbr);
+      fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
+        if (error) return res.status(error.status).json(error.message);
+        return res.status(200).json({
+          message: "icon uploaded",
+          icon: newIconNbr,
+        });
+      });
+    });
+  } catch (error) {
+    return res.status(error.status).json(error.message);
+  }
+};
+
 exports.register = async (req, res) => {
   const { email } = req.body;
   if (isRegistered({ email })) {
@@ -19,8 +84,12 @@ exports.register = async (req, res) => {
     if (error) return res.status(error.status).json(error.message);
 
     data = JSON.parse(data.toString());
-
-    let last_item_id = data.users[data.users.length - 1].id;
+    let last_item_id = 0;
+    if (data.users.length === 0) {
+      last_item_id = 1;
+    } else {
+      last_item_id = data.users[data.users.length - 1].id + 1;
+    }
 
     let newUser = { ...req.body };
 
@@ -28,7 +97,7 @@ exports.register = async (req, res) => {
 
     newUser.password = hash;
 
-    newUser = { ...newUser, id: last_item_id + 1, password: newUser.password };
+    newUser = { ...newUser, id: last_item_id, password: newUser.password };
 
     data.users.push(newUser);
     fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {

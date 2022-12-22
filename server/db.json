@@ -1,40 +1,30 @@
 {
   "users": [
     {
-      "id": 1,
       "firstName": "user1",
       "lastName": "user1",
+      "country": "Kazakhstan",
       "phone": "12345678",
-      "country": "Tunisia",
       "email": "user1@example.com",
-      "password": "$2a$10$7S/WfcByVXYLeccIivbBj.8wkbQfuuprrdXrlCMOotl1D23DJI3rm"
+      "password": "$2a$10$dZUFBmnq29ozkmfsSSmKlu27Q1rPaaq4ylIf.PcLZsTNRvmdAb/Le",
+      "id": 1
     },
     {
       "firstName": "user2",
       "lastName": "user2",
-      "country": "Bahamas",
       "phone": "23456789",
+      "country": "Tunisia",
       "email": "user2@example.com",
-      "password": "$2a$10$PXdg3zmH2GAZKL4XSiTkjuKaR2QuGqtQqxJDppc1Kg8sYExZ/qjPa",
+      "password": "$2a$10$RU5J0aXPsZM07NAbecGjNOk6wkFF9f.cQhRsVI3K6UxHZNfy5nd4y",
       "id": 2
-    },
-    {
-      "firstName": "user3",
-      "lastName": "user3",
-      "country": "Kazakhstan",
-      "phone": "3456789",
-      "email": "user3@example.com",
-      "password": "$2a$10$a711CdYcbCsUcdnrjycCOelGCIrmbjzqiMHr.ScTe4dLQlyHP.Fhq",
-      "id": 3
-    },
-    {
-      "firstName": "user4",
-      "lastName": "user4",
-      "country": "Macao",
-      "phone": "45678912",
-      "email": "user4@example.com",
-      "password": "$2a$10$vKNhoTBFGwCmpPT54kqfyeRKpv9sf0tQ5CSDh22Ve4fTx23IE9YDu",
-      "id": 4
     }
+  ],
+  "numbers": [
+    { "id": 1, "icon": "Screenshot 2022-11-14 132418.png-1671709223600" },
+    { "id": 2, "icon": "Screenshot 2022-11-14 132418.png-1671710216121" }
+  ],
+  "followers": [
+    { "id": 1, "icon": "Screenshot 2022-11-14 132418.png-1671709629133" },
+    { "id": 2, "icon": "Screenshot 2022-11-14 132418.png-1671710186653" }
   ]
 }
