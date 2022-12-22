@@ -1,12 +1,6 @@
 import axios from "axios";
 
-const REACT_APP_URL = "http://localhost:5000";
-
-export const fetchUsersAPI = async () => {
-  const { data } = await axios.get(`${REACT_APP_URL}/api/users`);
-
-  return data;
-};
+export const REACT_APP_URL = "http://localhost:5000";
 
 // create account
 export const registerAPI = async (value) => {
@@ -72,7 +66,11 @@ export const passwordForgotenAPI = async (value) => {
   });
 };
 
-// delete profile
-export const deleteProfileAPI = async (id) => {
-  await axios.delete(`${REACT_APP_URL}/api/auth/delete/${id}`);
+export const uploadNbrIcon = async (icon, token) => {
+  await axios.put(`${REACT_APP_URL}/api/icons/numbers`, icon, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
 };

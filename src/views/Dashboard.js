@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -15,8 +15,27 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
+import { REACT_APP_URL, uploadNbrIcon } from "../api/CRUD";
+import { useDispatch, useSelector } from "react-redux";
+import { isAuth } from "components/helpers/authantication";
 
 function Dashboard() {
+  const number = useSelector((state) => state.number);
+  const { user, token } = isAuth("user", "token");
+
+  const [iconNbr, setIconNbr] = useState("");
+  const [icon1, setIcon1] = useState(false);
+
+  const dispacth = useDispatch();
+
+  const uploadIconNumber = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("picture", iconNbr);
+
+    await uploadNbrIcon(icon, token);
+  };
+
   return (
     <>
       <Container fluid>
@@ -27,7 +46,26 @@ function Dashboard() {
                 <Row>
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-chart text-warning"></i>
+                      {/* <i className="nc-icon nc-chart text-warning"></i> */}
+                      <object
+                        data="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNbMlBo_PHKZZmsM6Cs3WLPR3ko1upWIEe4A&usqp=CAU"
+                        type="image/png"
+                        style={{ height: "4rem", width: "4rem" }}
+                      >
+                        <img
+                          src={`${REACT_APP_URL}/public/uploads/${number.icon}`}
+                          alt={number.icon}
+                        />
+                      </object>
+                      {icon1 && (
+                        <input
+                          width="10"
+                          heigth="10"
+                          type="file"
+                          name="iconNbr"
+                          onChange={(e) => setIconNbr(e.target.files[0])}
+                        />
+                      )}
                     </div>
                   </Col>
                   <Col xs="7">
@@ -41,8 +79,19 @@ function Dashboard() {
               <Card.Footer>
                 <hr></hr>
                 <div className="stats">
-                  <i className="fas fa-redo mr-1"></i>
-                  Update Now
+                  <button
+                    style={{
+                      border: "none",
+                      background: "none",
+                      color: "gray",
+                    }}
+                    onClick={() => {
+                      setIcon1(icon1 ? false : true);
+                    }}
+                  >
+                    <i className="fas fa-redo mr-1"></i>
+                    Update Now
+                  </button>
                 </div>
               </Card.Footer>
             </Card>
@@ -261,31 +310,11 @@ function Dashboard() {
                       ],
                       series: [
                         [
-                          542,
-                          443,
-                          320,
-                          780,
-                          553,
-                          453,
-                          326,
-                          434,
-                          568,
-                          610,
-                          756,
+                          542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756,
                           895,
                         ],
                         [
-                          412,
-                          243,
-                          280,
-                          580,
-                          453,
-                          353,
-                          300,
-                          364,
-                          368,
-                          410,
-                          636,
+                          412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636,
                           695,
                         ],
                       ],
