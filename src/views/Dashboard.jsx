@@ -29,45 +29,50 @@ const btnStyle = {
 
 const Dashboard = () => {
   const number = useSelector((state) => state.number);
-  const follower = useSelector((state) => state.follower);
+  // const follower = useSelector((state) => state.follower);
   const { user, token } = isAuth("user", "token");
 
-  const [iconNbr, setIconNbr] = useState("");
-  const [iconFlw, setIconFlw] = useState("");
+  const [numberIcon, setNumberIcon] = useState(null);
+  // const [iconFlw, setIconFlw] = useState("");
   const [icon1, setIcon1] = useState(false);
-  const [icon2, setIcon2] = useState(false);
+  // const [icon2, setIcon2] = useState(false);
 
   const dispacth = useDispatch();
 
+  const handleNumberIcon = (e) => setNumberIcon(e.target.files[0]);
+
   const handleCancelNumber = () => {
     setIcon1(false);
-    setIconNbr("");
+    setNumberIcon("");
   };
-  const handleCancelFollowers = () => {
-    setIcon2(false);
-    setIconFlw("");
-  };
+  // const handleCancelFollowers = () => {
+  //   setIcon2(false);
+  //   setIconFlw("");
+  // };
 
   const uploadIconNumber = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("numbers", iconNbr);
 
-    await uploadNbrIcon(formData, token).then(() => {
-      alert("icon uploaded succesfully");
-      dispacth(uploadNumber(iconNbr));
-    });
+    const formData = new FormData();
+    formData.append("numbers", numberIcon);
+    console.log("formData : ", formData);
+    console.log("numberIcon : ", numberIcon);
+
+    // await uploadNbrIcon(numberIcon.name, token).then(() => {
+    //   alert("icon uploaded succesfully");
+    //   dispacth(uploadNumber(iconNbr));
+    // });
   };
 
-  const uploadIconFollower = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("followers", iconFlw);
-    await uploadFlwIcon(formData, token).then(() => {
-      alert("icon uploaded succesfully");
-      dispacth(uploadFollower(iconFlw));
-    });
-  };
+  // const uploadIconFollower = async (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append("followers", iconFlw);
+  //   await uploadFlwIcon(formData, token).then(() => {
+  //     alert("icon uploaded succesfully");
+  //     dispacth(uploadFollower(iconFlw));
+  //   });
+  // };
 
   return (
     <>
@@ -99,7 +104,7 @@ const Dashboard = () => {
                           accept="image/*"
                           type="file"
                           name="iconNbr"
-                          onChange={(e) => setIconNbr(e.target.files[0])}
+                          onChange={handleNumberIcon}
                         />
                       )}
                     </div>
@@ -204,8 +209,7 @@ const Dashboard = () => {
               <Card.Body>
                 <Row>
                   <Col xs="5">
-                    <div className="icon-big text-center icon-warning">
-                      {/* <i className="nc-icon nc-favourite-28 text-primary"></i> */}
+                    {/* <div className="icon-big text-center icon-warning">
                       <object
                         data="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRsOjrtNtLYj9Z9GOWgpfhUO0Phlkyuij-vg&usqp=CAU"
                         type="image/png"
@@ -225,7 +229,7 @@ const Dashboard = () => {
                           }}
                         />
                       )}
-                    </div>
+                    </div> */}
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
@@ -235,7 +239,7 @@ const Dashboard = () => {
                   </Col>
                 </Row>
               </Card.Body>
-              <Card.Footer>
+              {/* <Card.Footer>
                 <hr />
                 <div className="stats">
                   {!icon2 ? (
@@ -267,7 +271,7 @@ const Dashboard = () => {
                     </>
                   )}
                 </div>
-              </Card.Footer>
+              </Card.Footer> */}
             </Card>
           </Col>
         </Row>
