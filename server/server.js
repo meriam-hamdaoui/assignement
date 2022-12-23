@@ -54,6 +54,7 @@ const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === "image/jpeg" ||
     file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jfif" ||
     file.mimetype === "image/png"
   ) {
     cb(null, true);
@@ -79,6 +80,26 @@ server.get("/api/users", (req, res) => {
     data = JSON.parse(data.toString());
 
     return res.status(200).json(data.users);
+  });
+});
+
+server.get("/api/icons/numbers", (req, res) => {
+  fs.readFile("./db.json", (error, data) => {
+    if (error) return res.status(error.status).json(error.message);
+
+    data = JSON.parse(data.toString());
+
+    return res.status(200).json(data.numbers);
+  });
+});
+
+server.get("/api/icons/followers", (req, res) => {
+  fs.readFile("./db.json", (error, data) => {
+    if (error) return res.status(error.status).json(error.message);
+
+    data = JSON.parse(data.toString());
+
+    return res.status(200).json(data.followers);
   });
 });
 

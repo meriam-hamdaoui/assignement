@@ -19,12 +19,6 @@
       "id": 2
     }
   ],
-  "numbers": [
-    { "id": 1, "icon": "Screenshot 2022-11-14 132418.png-1671709223600" },
-    { "id": 2, "icon": "Screenshot 2022-11-14 132418.png-1671710216121" }
-  ],
-  "followers": [
-    { "id": 1, "icon": "Screenshot 2022-11-14 132418.png-1671709629133" },
-    { "id": 2, "icon": "Screenshot 2022-11-14 132418.png-1671710186653" }
-  ]
+  "numbers": { "id": 1, "icon": "icon_1.png-1671795035167" },
+  "followers": { "id": 1, "icon": "icon_1.png-1671795309118" }
 }

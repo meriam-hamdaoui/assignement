@@ -15,25 +15,58 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import { REACT_APP_URL, uploadNbrIcon } from "../api/CRUD";
+import { REACT_APP_URL, uploadNbrIcon, uploadFlwIcon } from "../api/CRUD";
 import { useDispatch, useSelector } from "react-redux";
 import { isAuth } from "components/helpers/authantication";
+import { uploadNumber } from "JS/iconNumberReducer";
+import { uploadFollower } from "JS/iconFollowerReducer";
 
-function Dashboard() {
+const btnStyle = {
+  border: "none",
+  background: "none",
+  color: "gray",
+};
+
+const Dashboard = () => {
   const number = useSelector((state) => state.number);
+  const follower = useSelector((state) => state.follower);
   const { user, token } = isAuth("user", "token");
 
   const [iconNbr, setIconNbr] = useState("");
+  const [iconFlw, setIconFlw] = useState("");
   const [icon1, setIcon1] = useState(false);
+  const [icon2, setIcon2] = useState(false);
 
   const dispacth = useDispatch();
+
+  const handleCancelNumber = () => {
+    setIcon1(false);
+    setIconNbr("");
+  };
+  const handleCancelFollowers = () => {
+    setIcon2(false);
+    setIconFlw("");
+  };
 
   const uploadIconNumber = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("picture", iconNbr);
+    formData.append("numbers", iconNbr);
 
-    await uploadNbrIcon(icon, token);
+    await uploadNbrIcon(formData, token).then(() => {
+      alert("icon uploaded succesfully");
+      dispacth(uploadNumber(iconNbr));
+    });
+  };
+
+  const uploadIconFollower = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("followers", iconFlw);
+    await uploadFlwIcon(formData, token).then(() => {
+      alert("icon uploaded succesfully");
+      dispacth(uploadFollower(iconFlw));
+    });
   };
 
   return (
@@ -59,8 +92,11 @@ function Dashboard() {
                       </object>
                       {icon1 && (
                         <input
-                          width="10"
-                          heigth="10"
+                          style={{
+                            height: "5%",
+                            fontSize: "small",
+                          }}
+                          accept="image/*"
                           type="file"
                           name="iconNbr"
                           onChange={(e) => setIconNbr(e.target.files[0])}
@@ -77,21 +113,36 @@ function Dashboard() {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                <hr></hr>
+                <hr />
                 <div className="stats">
-                  <button
-                    style={{
-                      border: "none",
-                      background: "none",
-                      color: "gray",
-                    }}
-                    onClick={() => {
-                      setIcon1(icon1 ? false : true);
-                    }}
-                  >
-                    <i className="fas fa-redo mr-1"></i>
-                    Update Now
-                  </button>
+                  {!icon1 ? (
+                    <button
+                      style={btnStyle}
+                      onClick={() => {
+                        setIcon1(icon1 ? false : true);
+                      }}
+                    >
+                      <i className="fas fa-redo mr-1"></i>
+                      Update Now
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleCancelNumber}
+                        style={btnStyle}
+                      >
+                        cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={uploadIconNumber}
+                        style={btnStyle}
+                      >
+                        save
+                      </button>
+                    </>
+                  )}
                 </div>
               </Card.Footer>
             </Card>
@@ -154,7 +205,26 @@ function Dashboard() {
                 <Row>
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-favourite-28 text-primary"></i>
+                      {/* <i className="nc-icon nc-favourite-28 text-primary"></i> */}
+                      <object
+                        data="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRsOjrtNtLYj9Z9GOWgpfhUO0Phlkyuij-vg&usqp=CAU"
+                        type="image/png"
+                        style={{ height: "4rem", width: "4rem" }}
+                      >
+                        <img
+                          src={`${REACT_APP_URL}/public/uploads/${follower.icon}`}
+                          alt={follower.icon}
+                        />
+                      </object>
+                      {icon2 && (
+                        <input
+                          type="file"
+                          style={{
+                            height: "5%",
+                            fontSize: "small",
+                          }}
+                        />
+                      )}
                     </div>
                   </Col>
                   <Col xs="7">
@@ -166,10 +236,36 @@ function Dashboard() {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                <hr></hr>
+                <hr />
                 <div className="stats">
-                  <i className="fas fa-redo mr-1"></i>
-                  Update now
+                  {!icon2 ? (
+                    <button
+                      style={btnStyle}
+                      onClick={() => {
+                        setIcon2(icon2 ? false : true);
+                      }}
+                    >
+                      <i className="fas fa-redo mr-1"></i>
+                      Update Now
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={handleCancelFollowers}
+                        style={btnStyle}
+                      >
+                        cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={uploadIconFollower}
+                        style={btnStyle}
+                      >
+                        save
+                      </button>
+                    </>
+                  )}
                 </div>
               </Card.Footer>
             </Card>
@@ -664,6 +760,6 @@ function Dashboard() {
       </Container>
     </>
   );
-}
+};
 
 export default Dashboard;

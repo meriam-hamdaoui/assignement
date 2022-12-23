@@ -67,10 +67,24 @@ export const passwordForgotenAPI = async (value) => {
 };
 
 export const uploadNbrIcon = async (icon, token) => {
-  await axios.put(`${REACT_APP_URL}/api/icons/numbers`, icon, {
+  const { data } = await axios.put(`${REACT_APP_URL}/api/icons/numbers`, icon, {
     headers: {
       "Content-Type": "application/json",
       Authorization: token,
     },
   });
+  return data;
+};
+export const uploadFlwIcon = async (icon, token) => {
+  const { data } = await axios.put(
+    `${REACT_APP_URL}/api/icons/followers`,
+    icon,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+  return data;
 };

@@ -3,17 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 
 const numberSlice = createSlice({
   name: "number",
-  initialState: {
-    id: uuidv4(),
-    icon: "",
-  },
+  initialState: {},
   reducer: {
-    upload: (state, action) => {
+    uploadNumber: (state, action) => {
       return action.payload;
     },
   },
 });
 
-export const { upload } = numberSlice.actions;
+export const { uploadNumber } = numberSlice.actions;
 
 export default numberSlice.reducer;

@@ -9,66 +9,38 @@ const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 
 exports.uploadIconNbr = (req, res) => {
   try {
-    const icon = req.file.filename;
-
     fs.readFile("./db.json", (error, data) => {
       if (error) return res.status(error.status).json(error.message);
 
       data = JSON.parse(data.toString());
 
-      let last_item_id = 0;
+      data.numbers = { ...data.numbers, icon: req.file.filename };
 
-      if (data.numbers.length === 0) {
-        last_item_id = 1;
-      } else {
-        last_item_id = data.numbers[data.numbers.length - 1].id + 1;
-      }
-
-      const newIconNbr = { id: last_item_id, icon: icon };
-
-      data.numbers.push(newIconNbr);
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) return res.status(error.status).json(error.message);
-        return res.status(200).json({
-          message: "icon uploaded",
-          icon: newIconNbr,
-        });
+        return res.status(200).json(data.numbers);
       });
     });
   } catch (error) {
-    return res.status(error.status).json(error.message);
+    return res.status(500).json({ message: "damaged file" });
   }
 };
 exports.uploadIconFlw = (req, res) => {
   try {
-    const icon = req.file.filename;
-
     fs.readFile("./db.json", (error, data) => {
       if (error) return res.status(error.status).json(error.message);
 
       data = JSON.parse(data.toString());
 
-      let last_item_id = 0;
+      data.followers = { ...data.followers, icon: req.file.filename };
 
-      if (data.followers.length === 0) {
-        last_item_id = 1;
-      } else {
-        last_item_id = data.followers[data.followers.length - 1].id + 1;
-      }
-
-      const newIconNbr = { id: last_item_id, icon: icon };
-
-      data.followers.push(newIconNbr);
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) return res.status(error.status).json(error.message);
-        return res.status(200).json({
-          message: "icon uploaded",
-          icon: newIconNbr,
-        });
+        return res.status(200).json(data.followers);
       });
     });
   } catch (error) {
-    return res.status(error.status).json(error.message);
+    return res.status(500).json({ message: "damaged file" });
   }
 };
 
