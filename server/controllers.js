@@ -16,7 +16,8 @@ exports.uploadIconNbr = (req, res) => {
       data = JSON.parse(data.toString());
 
       const index = data.numbers.findIndex((el) => (el.id = id));
-      data.numbers[index] = { id: id, icon: req.file.filename };
+      console.log("index: " + index);
+      data.numbers[index] = { id: Number(id), icon: req.file.filename };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) return res.status(error.status).json(error.message);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -13,8 +13,8 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { REACT_APP_URL, uploadNbrIcon, uploadFlwIcon } from "../api/CRUD";
-import { uploadNumber } from "JS/iconNumberReducer";
+import { REACT_APP_URL, uploadNbrIcon, getIconNumberAPI } from "../api/CRUD";
+import { uploadNumber, setNumber } from "JS/iconNumberReducer";
 import { isAuth } from "components/helpers/authantication";
 
 const btnStyle = {
@@ -32,11 +32,20 @@ const Dashboard = () => {
   const [numberIcon, setNumberIcon] = useState("");
   const [icon1, setIcon1] = useState(false);
 
-  const handleNumberIcon = (e) => setNumberIcon(e.target.files[0]);
+  const handleNumberIcon = (e) => {
+    console.log("e.target.files[0] : ", e.target.files[0].name);
+    setNumberIcon(e.target.files[0]);
+  };
 
   const handleCancelNumber = () => {
     setIcon1(false);
     setNumberIcon("");
+  };
+
+  const getIconNumber = async () => {
+    await getIconNumberAPI(token).then((response) => {
+      dispatch(setNumber({ ...response.data }));
+    });
   };
 
   const uploadIconNumber = async (e) => {
@@ -45,17 +54,22 @@ const Dashboard = () => {
     const formData = new FormData();
     formData.append("numbers", numberIcon);
 
-    console.log("numbers : ", numberIcon);
+    console.log("formData : ", formData);
+    console.log("numberIcon : ", numberIcon);
 
     await uploadNbrIcon(numbers.id, formData, token)
       .then((response) => {
         console.log("response", response);
         alert("icon uploaded succesfully");
-        dispatch(uploadNumber([response]));
+        dispatch(uploadNumber(response));
         setIcon1(false);
       })
       .catch((error) => console.error(error.message));
   };
+
+  useEffect(() => {
+    getIconNumber();
+  }, []);
 
   return (
     <>
@@ -68,17 +82,17 @@ const Dashboard = () => {
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
                       {/* <i className="nc-icon nc-chart text-warning"></i> */}
-                      <object
+                      {/* <object
                         data="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNbMlBo_PHKZZmsM6Cs3WLPR3ko1upWIEe4A&usqp=CAU"
                         type="image/png"
                         style={{ height: "4rem", width: "4rem" }}
-                      >
-                        <img
-                          src={`${REACT_APP_URL}/api/icons/numbers/${numbers.id}`}
-                          alt={numbers.icon}
-                          style={{ height: "4rem", width: "4rem" }}
-                        />
-                      </object>
+                      > */}
+                      <img
+                        src={`${REACT_APP_URL}/public/uploads/${numbers.icon}`}
+                        alt={numbers.icon}
+                        style={{ height: "4rem", width: "4rem" }}
+                      />
+                      {/* </object> */}
                       {icon1 && (
                         <input
                           style={{

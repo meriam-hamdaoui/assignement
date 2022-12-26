@@ -46,7 +46,7 @@ const storage = (folderName) =>
       cb(null, `public/${folderName}`);
     },
     filename: (req, file, cb) => {
-      cb(null, file.originalname + "-" + Date.now());
+      cb(null, Date.now() + "_" + file.originalname);
     },
   });
 
@@ -83,14 +83,14 @@ server.get("/api/users", (req, res) => {
   });
 });
 
-server.get("/api/icons/numbers/:id", (req, res) => {
-  const { id } = req.params;
+server.get("/api/icons/numbers", (req, res) => {
+  // const { id } = req.params;
   fs.readFile("./db.json", (error, data) => {
     if (error) return res.status(error.status).json(error.message);
 
     data = JSON.parse(data.toString());
-    const index = data.numbers.findIndex((el) => (el.id = id));
-    return res.status(200).json(data.numbers[index]);
+    // const index = data.numbers.findIndex((el) => (el.id = id));
+    return res.status(200).json({ data: data.numbers[0] });
   });
 });
 

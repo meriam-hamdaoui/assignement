@@ -66,6 +66,16 @@ export const passwordForgotenAPI = async (value) => {
   });
 };
 
+export const getIconNumberAPI = async (token) => {
+  const { data } = await axios.get(`${REACT_APP_URL}/api/icons/numbers`, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: token,
+    },
+  });
+  return data;
+};
+
 export const uploadNbrIcon = async (id, icon, token) => {
   const { data } = await axios.put(
     `${REACT_APP_URL}/api/icons/numbers/${id}`,

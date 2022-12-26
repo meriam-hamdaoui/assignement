@@ -6,12 +6,15 @@ const numberSlice = createSlice({
   initialState: {},
 
   reducers: {
+    setNumber: (state, action) => {
+      return action.payload;
+    },
     uploadNumber: (state, action) => {
-      return [{ id: action.payload.id, icon: action.payload.icon }];
+      return action.payload;
     },
   },
 });
 
-export const { uploadNumber } = numberSlice.actions;
+export const { uploadNumber, setNumber } = numberSlice.actions;
 
 export default numberSlice.reducer;
