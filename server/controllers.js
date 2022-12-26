@@ -15,7 +15,9 @@ exports.uploadIconNbr = (req, res) => {
 
       data = JSON.parse(data.toString());
 
-      const index = data.numbers.findIndex((el) => (el.id = id));
+      const index = data.numbers.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
       console.log("index: " + index);
       data.numbers[index] = { id: Number(id), icon: req.file.filename };
 
@@ -30,16 +32,18 @@ exports.uploadIconNbr = (req, res) => {
 };
 exports.uploadIconFlw = (req, res) => {
   try {
+    const { id } = req.params;
     fs.readFile("./db.json", (error, data) => {
       if (error) return res.status(error.status).json(error.message);
 
       data = JSON.parse(data.toString());
-
-      data.followers = { ...data.followers, icon: req.file.filename };
-
+      const index = data.followers.findIndex(
+        (el) => Number(el.id) === Number(id)
+      );
+      data.followers[index] = { id: Number(id), icon: req.file.filename };
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) return res.status(error.status).json(error.message);
-        return res.status(200).json(data.followers);
+        return res.status(200).json(data.followers[index]);
       });
     });
   } catch (error) {

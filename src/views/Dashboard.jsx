@@ -13,8 +13,15 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { REACT_APP_URL, uploadNbrIcon, getIconNumberAPI } from "../api/CRUD";
+import {
+  REACT_APP_URL,
+  uploadNbrIcon,
+  getIconNumberAPI,
+  getIconFollowerAPI,
+  uploadFlwIcon,
+} from "../api/CRUD";
 import { uploadNumber, setNumber } from "JS/iconNumberReducer";
+import { uploadFollower, setFollower } from "JS/iconFollowerReducer";
 import { isAuth } from "components/helpers/authantication";
 
 const btnStyle = {
@@ -25,6 +32,8 @@ const btnStyle = {
 
 const Dashboard = () => {
   const numbers = useSelector((state) => state.number);
+  const followers = useSelector((state) => state.follower);
+
   const { user, token } = isAuth("user", "token");
 
   const dispatch = useDispatch();
@@ -32,13 +41,25 @@ const Dashboard = () => {
   const [numberIcon, setNumberIcon] = useState("");
   const [icon1, setIcon1] = useState(false);
 
+  const [followerIcon, setFollowerIcon] = useState("");
+  const [icon2, setIcon2] = useState(false);
+
   const handleNumberIcon = (e) => {
     setNumberIcon(e.target.files[0]);
+  };
+
+  const handleFollowerIcon = (e) => {
+    setFollowerIcon(e.target.files[0]);
   };
 
   const handleCancelNumber = () => {
     setIcon1(false);
     setNumberIcon("");
+  };
+
+  const handleCancelFollower = () => {
+    setIcon2(false);
+    setFollowerIcon("");
   };
 
   const getIconNumber = async () => {
@@ -47,12 +68,16 @@ const Dashboard = () => {
     });
   };
 
+  const getIconFollower = async () => {
+    await getIconFollowerAPI(token).then((response) => {
+      dispatch(setFollower({ ...response.data }));
+    });
+  };
+
   const uploadIconNumber = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("numbers", numberIcon);
-
     await uploadNbrIcon(numbers.id, formData, token)
       .then((response) => {
         alert("icon uploaded succesfully");
@@ -63,8 +88,23 @@ const Dashboard = () => {
       .catch((error) => console.error(error.message));
   };
 
+  const uploadIconFollower = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("followers", followerIcon);
+    await uploadFlwIcon(followers.id, formData, token)
+      .then((response) => {
+        alert("icon uploaded succesfully");
+        dispatch(uploadFollower(response));
+        setIcon1(false);
+        getIconFollower();
+      })
+      .catch((error) => console.error(error.message));
+  };
+
   useEffect(() => {
     getIconNumber();
+    getIconFollower();
   }, []);
 
   return (
@@ -200,27 +240,29 @@ const Dashboard = () => {
               <Card.Body>
                 <Row>
                   <Col xs="5">
-                    {/* <div className="icon-big text-center icon-warning">
-                      <object
-                        data="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRsOjrtNtLYj9Z9GOWgpfhUO0Phlkyuij-vg&usqp=CAU"
-                        type="image/png"
+                    <div className="icon-big text-center icon-warning">
+                      <img
+                        src={
+                          followers.icon
+                            ? require(`../../server/public/uploads/${followers.icon}`)
+                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNbMlBo_PHKZZmsM6Cs3WLPR3ko1upWIEe4A&usqp=CAU"
+                        }
+                        alt="icon"
                         style={{ height: "4rem", width: "4rem" }}
-                      >
-                        <img
-                          src={`${REACT_APP_URL}/public/uploads/${follower.icon}`}
-                          alt={follower.icon}
-                        />
-                      </object>
+                      />
                       {icon2 && (
                         <input
-                          type="file"
                           style={{
                             height: "5%",
                             fontSize: "small",
                           }}
+                          accept="image/*"
+                          type="file"
+                          name="iconNbr"
+                          onChange={handleFollowerIcon}
                         />
                       )}
-                    </div> */}
+                    </div>
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
@@ -230,7 +272,7 @@ const Dashboard = () => {
                   </Col>
                 </Row>
               </Card.Body>
-              {/* <Card.Footer>
+              <Card.Footer>
                 <hr />
                 <div className="stats">
                   {!icon2 ? (
@@ -247,7 +289,7 @@ const Dashboard = () => {
                     <>
                       <button
                         type="button"
-                        onClick={handleCancelFollowers}
+                        onClick={handleCancelFollower}
                         style={btnStyle}
                       >
                         cancel
@@ -262,7 +304,7 @@ const Dashboard = () => {
                     </>
                   )}
                 </div>
-              </Card.Footer> */}
+              </Card.Footer>
             </Card>
           </Col>
         </Row>

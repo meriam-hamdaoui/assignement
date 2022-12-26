@@ -76,6 +76,16 @@ export const getIconNumberAPI = async (token) => {
   return data;
 };
 
+export const getIconFollowerAPI = async (token) => {
+  const { data } = await axios.get(`${REACT_APP_URL}/api/icons/followers`, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: token,
+    },
+  });
+  return data;
+};
+
 export const uploadNbrIcon = async (id, icon, token) => {
   const { data } = await axios.put(
     `${REACT_APP_URL}/api/icons/numbers/${id}`,
@@ -91,11 +101,11 @@ export const uploadNbrIcon = async (id, icon, token) => {
 };
 export const uploadFlwIcon = async (icon, token) => {
   const { data } = await axios.put(
-    `${REACT_APP_URL}/api/icons/followers`,
+    `${REACT_APP_URL}/api/icons/followers/${id}`,
     icon,
     {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: token,
       },
     }
