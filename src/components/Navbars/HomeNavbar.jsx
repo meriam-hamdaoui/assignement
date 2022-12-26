@@ -1,7 +1,6 @@
 import { isAuth } from "components/helpers/authantication";
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import AdminNavbar from "./AdminNavbar";
 
 const HomeNavbar = () => {
   const { token } = isAuth("token");

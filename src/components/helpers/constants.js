@@ -1,5 +1,38 @@
 import { v4 as uuidv4 } from "uuid";
 
+export const navItems = [
+  {
+    to: "dashboard",
+    i: "nc-icon nc-chart-pie-35",
+    p: "Dashboard",
+  },
+  {
+    to: "user",
+    i: "nc-icon nc-circle-09",
+    p: "User Profile",
+  },
+  {
+    to: "table",
+    i: "nc-icon nc-notes",
+    p: "Table List",
+  },
+  {
+    to: "typography",
+    i: "nc-icon nc-paper-2",
+    p: "Typography",
+  },
+  {
+    to: "icons",
+    i: "nc-icon nc-atom",
+    p: "Icons",
+  },
+  {
+    to: "notifications",
+    i: "nc-icon nc-bell-55",
+    p: "Notifications",
+  },
+];
+
 export const countries = [
   { id: uuidv4(), value: "Afghanistan", label: "Afghanistan" },
   { id: uuidv4(), value: "Åland Islands", label: "Åland Islands" },

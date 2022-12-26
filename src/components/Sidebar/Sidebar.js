@@ -18,6 +18,14 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import { isAuth } from "../helpers/authantication";
+import { navItems } from "../helpers/constants";
+
+const styleLink = {
+  fontSize: "20px",
+  display: "flex",
+};
+
+const styleP = { fontSize: "14px", marginLeft: "1rem" };
 
 const Sidebar = ({ color, image }) => {
   const { user, token } = isAuth("user", "token");
@@ -45,87 +53,18 @@ const Sidebar = ({ color, image }) => {
             </a>
           </div>
           <Nav>
-            <NavLink
-              to={`/profile/${user.id}/dashboard`}
-              className="nav-link"
-              activeclassname="active"
-              style={{
-                fontSize: "20px",
-                display: "flex",
-              }}
-            >
-              <i className="nc-icon nc-chart-pie-35"></i>
-              <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Dashboard</p>
-            </NavLink>
-
-            <NavLink
-              to={`/profile/${user.id}/user`}
-              className="nav-link"
-              activeclassname="active"
-              style={{
-                fontSize: "20px",
-                display: "flex",
-              }}
-            >
-              <i className="nc-icon nc-circle-09"></i>
-              <p style={{ fontSize: "14px", marginLeft: "1rem" }}>
-                User Profile
-              </p>
-            </NavLink>
-
-            <Nav.Link
-              href={`/profile/${user.id}/table`}
-              className="nav-link"
-              activeclassname="active"
-              style={{
-                fontSize: "20px",
-                display: "flex",
-              }}
-            >
-              <i className="nc-icon nc-notes"></i>
-              <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Table List</p>
-            </Nav.Link>
-
-            <Nav.Link
-              href={`/profile/${user.id}/typography`}
-              className="nav-link"
-              activeclassname="active"
-              style={{
-                fontSize: "20px",
-                display: "flex",
-              }}
-            >
-              <i className="nc-icon nc-paper-2"></i>
-              <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Typography</p>
-            </Nav.Link>
-
-            <Nav.Link
-              href={`/profile/${user.id}/icons`}
-              className="nav-link"
-              activeclassname="active"
-              style={{
-                fontSize: "20px",
-                display: "flex",
-              }}
-            >
-              <i className="nc-icon nc-atom"></i>
-              <p style={{ fontSize: "14px", marginLeft: "1rem" }}>Icons</p>
-            </Nav.Link>
-
-            <Nav.Link
-              href={`/profile/${user.id}/notifications`}
-              className="nav-link"
-              activeclassname="active"
-              style={{
-                fontSize: "20px",
-                display: "flex",
-              }}
-            >
-              <i className="nc-icon nc-bell-55"></i>
-              <p style={{ fontSize: "14px", marginLeft: "1rem" }}>
-                Notifications
-              </p>
-            </Nav.Link>
+            {navItems.map((el, index) => (
+              <NavLink
+                key={index}
+                to={`/profile/${user.id}/${el.to}`}
+                className="nav-link"
+                activeclassname="active"
+                style={styleLink}
+              >
+                <i className={`${el.i}`}></i>
+                <p style={styleP}>{el.p}</p>
+              </NavLink>
+            ))}
           </Nav>
         </div>
       </div>
