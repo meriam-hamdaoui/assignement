@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
-  Badge,
   Button,
   Card,
-  Navbar,
-  Nav,
   Table,
   Container,
   Row,
@@ -15,11 +12,10 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 import { REACT_APP_URL, uploadNbrIcon, uploadFlwIcon } from "../api/CRUD";
-import { useDispatch, useSelector } from "react-redux";
-import { isAuth } from "components/helpers/authantication";
 import { uploadNumber } from "JS/iconNumberReducer";
-import { uploadFollower } from "JS/iconFollowerReducer";
+import { isAuth } from "components/helpers/authantication";
 
 const btnStyle = {
   border: "none",
@@ -28,16 +24,13 @@ const btnStyle = {
 };
 
 const Dashboard = () => {
-  const number = useSelector((state) => state.number);
-  // const follower = useSelector((state) => state.follower);
+  const numbers = useSelector((state) => state.number);
   const { user, token } = isAuth("user", "token");
 
-  const [numberIcon, setNumberIcon] = useState(null);
-  // const [iconFlw, setIconFlw] = useState("");
-  const [icon1, setIcon1] = useState(false);
-  // const [icon2, setIcon2] = useState(false);
+  const dispatch = useDispatch();
 
-  const dispacth = useDispatch();
+  const [numberIcon, setNumberIcon] = useState("");
+  const [icon1, setIcon1] = useState(false);
 
   const handleNumberIcon = (e) => setNumberIcon(e.target.files[0]);
 
@@ -45,34 +38,24 @@ const Dashboard = () => {
     setIcon1(false);
     setNumberIcon("");
   };
-  // const handleCancelFollowers = () => {
-  //   setIcon2(false);
-  //   setIconFlw("");
-  // };
 
   const uploadIconNumber = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
     formData.append("numbers", numberIcon);
-    console.log("formData : ", formData);
-    console.log("numberIcon : ", numberIcon);
 
-    // await uploadNbrIcon(numberIcon.name, token).then(() => {
-    //   alert("icon uploaded succesfully");
-    //   dispacth(uploadNumber(iconNbr));
-    // });
+    console.log("numbers : ", numberIcon);
+
+    await uploadNbrIcon(numbers.id, formData, token)
+      .then((response) => {
+        console.log("response", response);
+        alert("icon uploaded succesfully");
+        dispatch(uploadNumber([response]));
+        setIcon1(false);
+      })
+      .catch((error) => console.error(error.message));
   };
-
-  // const uploadIconFollower = async (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append("followers", iconFlw);
-  //   await uploadFlwIcon(formData, token).then(() => {
-  //     alert("icon uploaded succesfully");
-  //     dispacth(uploadFollower(iconFlw));
-  //   });
-  // };
 
   return (
     <>
@@ -91,8 +74,9 @@ const Dashboard = () => {
                         style={{ height: "4rem", width: "4rem" }}
                       >
                         <img
-                          src={`${REACT_APP_URL}/public/uploads/${number.icon}`}
-                          alt={number.icon}
+                          src={`${REACT_APP_URL}/api/icons/numbers/${numbers.id}`}
+                          alt={numbers.icon}
+                          style={{ height: "4rem", width: "4rem" }}
                         />
                       </object>
                       {icon1 && (

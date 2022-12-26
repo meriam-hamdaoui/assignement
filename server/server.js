@@ -83,13 +83,14 @@ server.get("/api/users", (req, res) => {
   });
 });
 
-server.get("/api/icons/numbers", (req, res) => {
+server.get("/api/icons/numbers/:id", (req, res) => {
+  const { id } = req.params;
   fs.readFile("./db.json", (error, data) => {
     if (error) return res.status(error.status).json(error.message);
 
     data = JSON.parse(data.toString());
-
-    return res.status(200).json(data.numbers);
+    const index = data.numbers.findIndex((el) => (el.id = id));
+    return res.status(200).json(data.numbers[index]);
   });
 });
 
@@ -104,7 +105,7 @@ server.get("/api/icons/followers", (req, res) => {
 });
 
 server.put(
-  "/api/icons/numbers",
+  "/api/icons/numbers/:id",
   isAuthenticated,
   upload("uploads").single("numbers"),
   uploadIconNbr

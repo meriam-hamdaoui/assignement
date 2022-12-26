@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const followerSlice = createSlice({
   name: "follower",
   initialState: {},
-  reducer: {
+  reducers: {
     uploadFollower: (state, action) => {
       return action.payload;
     },

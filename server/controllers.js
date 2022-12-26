@@ -9,16 +9,18 @@ const userdb = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
 
 exports.uploadIconNbr = (req, res) => {
   try {
+    const { id } = req.params;
     fs.readFile("./db.json", (error, data) => {
       if (error) return res.status(error.status).json(error.message);
 
       data = JSON.parse(data.toString());
 
-      data.numbers = { ...data.numbers, icon: req.file.filename };
+      const index = data.numbers.findIndex((el) => (el.id = id));
+      data.numbers[index] = { id: id, icon: req.file.filename };
 
       fs.writeFile("./db.json", JSON.stringify(data), (error, result) => {
         if (error) return res.status(error.status).json(error.message);
-        return res.status(200).json(data.numbers);
+        return res.status(200).json(data.numbers[index]);
       });
     });
   } catch (error) {
