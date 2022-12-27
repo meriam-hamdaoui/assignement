@@ -99,7 +99,7 @@ export const uploadNbrIcon = async (id, icon, token) => {
   );
   return data;
 };
-export const uploadFlwIcon = async (icon, token) => {
+export const uploadFlwIcon = async (id, icon, token) => {
   const { data } = await axios.put(
     `${REACT_APP_URL}/api/icons/followers/${id}`,
     icon,
