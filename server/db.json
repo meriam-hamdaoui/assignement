@@ -1,1 +1,33 @@
-{"users":[{"firstName":"user1","lastName":"user11","country":"Kazakhstan","phone":"12345678","email":"user1@example.com","password":"$2a$10$AYk3V55LbK4RTVYOYAF1GeEgk1FcvJY8zp.jvBurp4YcZRfmKziBW","id":1},{"firstName":"user2","lastName":"user2","phone":"23456789","country":"Tunisia","email":"user2@example.com","password":"$2a$10$RU5J0aXPsZM07NAbecGjNOk6wkFF9f.cQhRsVI3K6UxHZNfy5nd4y","id":2}],"numbers":[{"id":1,"icon":"1672132511537_icon_3.png"}],"followers":[{"id":1,"icon":"1672126454901_icon_2.jfif"}]}
+{
+  "users": [
+    {
+      "firstName": "user1",
+      "lastName": "user11",
+      "country": "Kazakhstan",
+      "phone": "12345678",
+      "email": "user1@example.com",
+      "password": "$2a$10$AYk3V55LbK4RTVYOYAF1GeEgk1FcvJY8zp.jvBurp4YcZRfmKziBW",
+      "id": 1
+    },
+    {
+      "firstName": "user2",
+      "lastName": "user2",
+      "phone": "23456789",
+      "country": "Tunisia",
+      "email": "user2@example.com",
+      "password": "$2a$10$RU5J0aXPsZM07NAbecGjNOk6wkFF9f.cQhRsVI3K6UxHZNfy5nd4y",
+      "id": 2
+    },
+    {
+      "firstName": "user31",
+      "lastName": "user32",
+      "country": "Lao People's Democratic Republic",
+      "phone": "345678919",
+      "email": "user3@example.com",
+      "password": "$2a$10$7o3LVPrgV4DIz1pKKstIEeeINUTZODigO0LdiM4gmEdstCqkuF.Eu",
+      "id": 3
+    }
+  ],
+  "numbers": [{ "id": 1, "icon": "1672147146055_icon_4.png" }],
+  "followers": [{ "id": 1, "icon": "1672147155799_icon_2.jfif" }]
+}
