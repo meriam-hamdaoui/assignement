@@ -2,11 +2,11 @@
   "users": [
     {
       "firstName": "user1",
-      "lastName": "user11",
-      "country": "Kazakhstan",
+      "lastName": "user1",
+      "country": "Jersey",
       "phone": "12345678",
       "email": "user1@example.com",
-      "password": "$2a$10$AYk3V55LbK4RTVYOYAF1GeEgk1FcvJY8zp.jvBurp4YcZRfmKziBW",
+      "password": "$2a$10$7y/RSbVZ5KauGD22XGKaYu/2G2XuhdRwyNCOzCK8qf2cvYLaRnxVO",
       "id": 1
     },
     {
@@ -28,6 +28,6 @@
       "id": 3
     }
   ],
-  "numbers": [{ "id": 1, "icon": "1672147146055_icon_4.png" }],
-  "followers": [{ "id": 1, "icon": "1672147155799_icon_2.jfif" }]
+  "numbers": [{ "id": 1, "icon": "1672148087726_icon_1.png" }],
+  "followers": [{ "id": 1, "icon": "1672148097326_icon_4.png" }]
 }
