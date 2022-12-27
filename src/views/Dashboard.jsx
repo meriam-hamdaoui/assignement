@@ -22,6 +22,7 @@ import {
 } from "../api/CRUD";
 import { uploadNumber, setNumber } from "JS/iconNumberReducer";
 import { uploadFollower, setFollower } from "JS/iconFollowerReducer";
+import { setNumberGB, setFollowerK } from "JS/dataReducer";
 import { isAuth } from "components/helpers/authantication";
 
 const btnStyle = {
@@ -33,6 +34,10 @@ const btnStyle = {
 const Dashboard = () => {
   const numbers = useSelector((state) => state.number);
   const followers = useSelector((state) => state.follower);
+
+  const number_GB = useSelector((state) => state.numberGB);
+
+  const follower_K = useSelector((state) => state.followerK);
 
   const { user, token } = isAuth("user", "token");
 
@@ -78,6 +83,7 @@ const Dashboard = () => {
       .then((response) => {
         alert("icon uploaded succesfully");
         dispatch(uploadNumber(response));
+        dispatch(setNumberGB());
         setIcon1(false);
         getIconNumber();
       })
@@ -92,6 +98,7 @@ const Dashboard = () => {
       .then((response) => {
         alert("icon uploaded succesfully");
         dispatch(uploadFollower(response));
+        dispatch(setFollowerK());
         setIcon1(false);
         getIconFollower();
       })
@@ -139,7 +146,7 @@ const Dashboard = () => {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Number</p>
-                      <Card.Title as="h4">150GB</Card.Title>
+                      <Card.Title as="h4">{number_GB}GB</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -263,7 +270,7 @@ const Dashboard = () => {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Followers</p>
-                      <Card.Title as="h4">+45K</Card.Title>
+                      <Card.Title as="h4">+{follower_K}K</Card.Title>
                     </div>
                   </Col>
                 </Row>
