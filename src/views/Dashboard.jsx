@@ -44,13 +44,9 @@ const Dashboard = () => {
   const [followerIcon, setFollowerIcon] = useState("");
   const [icon2, setIcon2] = useState(false);
 
-  const handleNumberIcon = (e) => {
-    setNumberIcon(e.target.files[0]);
-  };
+  const handleNumberIcon = (e) => setNumberIcon(e.target.files[0]);
 
-  const handleFollowerIcon = (e) => {
-    setFollowerIcon(e.target.files[0]);
-  };
+  const handleFollowerIcon = (e) => setFollowerIcon(e.target.files[0]);
 
   const handleCancelNumber = () => {
     setIcon1(false);
