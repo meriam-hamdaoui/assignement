@@ -1,23 +1,28 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from "react-notification-alert";
 // react-bootstrap components
 import {
   Alert,
-  Badge,
   Button,
   Card,
   Modal,
-  Navbar,
-  Nav,
   Container,
   Row,
   Col,
 } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { notifications } from "components/helpers/constants";
+import { setNotifications, deleteNotif } from "JS/notificationReducer";
 
 function Notifications() {
-  const [showModal, setShowModal] = React.useState(false);
-  const notificationAlertRef = React.useRef(null);
+  const notifiState = useSelector((state) => state.notification);
+
+  const dispatch = useDispatch();
+
+  const [showModal, setShowModal] = useState(false);
+  const notificationAlertRef = useRef(null);
+
   const notify = (place) => {
     var color = Math.floor(Math.random() * 5 + 1);
     var type;
@@ -57,6 +62,17 @@ function Notifications() {
     };
     notificationAlertRef.current.notificationAlert(options);
   };
+
+  const handleDelete = (item) => {
+    dispatch(deleteNotif(item));
+  };
+
+  const handleNotification = () => {
+    dispatch(setNotifications([...notifications]));
+  };
+
+  useEffect(() => handleNotification(), []);
+
   return (
     <>
       <div className="rna-container">
@@ -67,7 +83,7 @@ function Notifications() {
           <Card.Header>
             <Card.Title as="h4">Notifications</Card.Title>
             <p className="card-category">
-              Handcrafted by our friend and colleague{" "}
+              Handcrafted by our friend and colleague
               <a
                 href="https://github.com/EINazare"
                 rel="noopener noreferrer"
@@ -147,76 +163,26 @@ function Notifications() {
                 <h5>
                   <small>Notification States</small>
                 </h5>
-                <Alert variant="primary">
-                  <button
-                    aria-hidden={true}
-                    className="close"
-                    data-dismiss="alert"
-                    type="button"
-                  >
-                    <i className="nc-icon nc-simple-remove"></i>
-                  </button>
-                  <span>
-                    <b>Primary -</b>
-                    This is a regular notification made with ".alert-primary"
-                  </span>
-                </Alert>
-                <Alert variant="info">
-                  <button
-                    aria-hidden={true}
-                    className="close"
-                    data-dismiss="alert"
-                    type="button"
-                  >
-                    <i className="nc-icon nc-simple-remove"></i>
-                  </button>
-                  <span>
-                    <b>Info -</b>
-                    This is a regular notification made with ".alert-info"
-                  </span>
-                </Alert>
-                <Alert variant="success">
-                  <button
-                    aria-hidden={true}
-                    className="close"
-                    data-dismiss="alert"
-                    type="button"
-                  >
-                    <i className="nc-icon nc-simple-remove"></i>
-                  </button>
-                  <span>
-                    <b>Success -</b>
-                    This is a regular notification made with ".alert-success"
-                  </span>
-                </Alert>
-                <Alert variant="warning">
-                  <button
-                    aria-hidden={true}
-                    className="close"
-                    data-dismiss="alert"
-                    type="button"
-                  >
-                    <i className="nc-icon nc-simple-remove"></i>
-                  </button>
-                  <span>
-                    <b>Warning -</b>
-                    This is a regular notification made with ".alert-warning"
-                  </span>
-                </Alert>
-                <Alert variant="danger">
-                  <button
-                    aria-hidden={true}
-                    className="close"
-                    data-dismiss="alert"
-                    type="button"
-                  >
-                    <i className="nc-icon nc-simple-remove"></i>
-                  </button>
-                  <span>
-                    <b>Danger -</b>
-                    This is a regular notification made with ".alert-danger"
-                  </span>
-                </Alert>
+                {notifiState.map((el, index) => {
+                  return (
+                    <Alert key={index} variant={el.variant}>
+                      <button
+                        aria-hidden={true}
+                        className="close"
+                        data-dismiss="alert"
+                        type="button"
+                        onClick={() => handleDelete(el)}
+                      >
+                        <i className="nc-icon nc-simple-remove"></i>
+                      </button>
+                      <span>
+                        <b>{el.b} -</b>
+                        This is a regular notification made with ".alert-
+                        {el.variant}"
+                      </span>
+                    </Alert>
+                  );
+                })}
               </Col>
             </Row>
             <br></br>

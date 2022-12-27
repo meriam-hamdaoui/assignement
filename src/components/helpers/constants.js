@@ -33,6 +33,34 @@ export const navItems = [
   },
 ];
 
+export const notifications = [
+  {
+    id: 1,
+    variant: "primary",
+    b: "Primary",
+  },
+  {
+    id: 2,
+    variant: "info",
+    b: "Info",
+  },
+  {
+    id: 3,
+    variant: "success",
+    b: "Success",
+  },
+  {
+    id: 4,
+    variant: "warning",
+    b: "Warning",
+  },
+  {
+    id: 5,
+    variant: "danger",
+    b: "Danger",
+  },
+];
+
 export const countries = [
   { id: uuidv4(), value: "Afghanistan", label: "Afghanistan" },
   { id: uuidv4(), value: "Åland Islands", label: "Åland Islands" },
