@@ -26,8 +26,17 @@
       "email": "user3@example.com",
       "password": "$2a$10$7o3LVPrgV4DIz1pKKstIEeeINUTZODigO0LdiM4gmEdstCqkuF.Eu",
       "id": 3
+    },
+    {
+      "firstName": "user45",
+      "lastName": "user4",
+      "country": "Cambodia",
+      "phone": "67891234",
+      "email": "user4@example.com",
+      "password": "$2a$10$Y5OJxzqNCkC3w2dsYgDG5O5WBGXujN24eAr8z2SDb8BGqj5l4n.d6",
+      "id": 4
     }
   ],
-  "numbers": [{ "id": 1, "icon": "1672148087726_icon_1.png" }],
+  "numbers": [{ "id": 1, "icon": "1672220296505_icon_2.jfif" }],
   "followers": [{ "id": 1, "icon": "1672148097326_icon_4.png" }]
 }
